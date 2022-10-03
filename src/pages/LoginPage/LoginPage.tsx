@@ -1,40 +1,77 @@
 import React from 'react'
 
-import { Input } from '../../common/fields'
 import { Button } from '../../common/buttons'
+import { Input } from '../../common/fields'
 
-import './LoginPage.css'
+import styles from './LoginPage.module.css'
+
+const validateIsEmpty = (value: string) => {
+  if (!value) return 'field required'
+  return null
+}
+
+const validateUsername = (value: string) => {
+  return validateIsEmpty(value)
+}
+const validatePassword = (value: string) => {
+  return validateIsEmpty(value)
+}
+
+const loginFormValidateSchema = {
+  username: validateUsername,
+  password: validatePassword
+}
+
+const validateLoginForm = (name: keyof typeof loginFormValidateSchema, value: string) => {
+  return loginFormValidateSchema[name](value)
+}
 
 export const LoginPage = () => {
-  const [formValues, setFormValues] = React.useState({ username: '213', password: '' })
+  const [formValues, setFormValues] = React.useState({ username: '', password: '' })
+  const [formErrors, setFormErrors] = React.useState<{ [key: string]: null | string }>({
+    username: null,
+    password: null
+  })
 
   return (
-    <div className='login_page'>
-      <div className='login_page_container'>
-        <div>header</div>
-        <div className='login_page_form_container'>
-          <div className='login_page_input_container'>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <div className={styles.header_container}>DOGGEE</div>
+        <div className={styles.form_container}>
+          <div className={styles.input_container}>
             <Input
+              isError={!!formErrors.username}
+              helperText={formErrors.username ?? undefined}
               value={formValues.username}
               placeholder='username'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormValues({ ...formValues, username: e.target.value })
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const username = e.target.value
+                setFormValues({ ...formValues, username })
+                const error = validateLoginForm('username', username)
+                setFormErrors({ ...formErrors, username: error })
+              }}
             />
           </div>
-          <div className='login_page_input_container'>
+          <div className={styles.input_container}>
             <Input
+              type='password'
+              isError={!!formErrors.password}
+              helperText={formErrors.password ?? undefined}
               value={formValues.password}
               placeholder='password'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormValues({ ...formValues, password: e.target.value })
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const password = e.target.value
+                setFormValues({ ...formValues, password })
+                const error = validateLoginForm('password', password)
+                setFormErrors({ ...formErrors, password: error })
+              }}
             />
           </div>
           <div>
             <Button>Sign in</Button>
           </div>
         </div>
+        <div className={styles.sign_up_container}>Create new account</div>
       </div>
     </div>
   )

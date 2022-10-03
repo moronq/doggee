@@ -1,0 +1,17 @@
+.button {
+  background: #f5c678;
+  border-radius: 5px;
+  padding: 10px 80.5px;
+  border: none;
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.button:hover {
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.button:active {
+  background: rgba(245, 198, 120, 0.7);
+}
