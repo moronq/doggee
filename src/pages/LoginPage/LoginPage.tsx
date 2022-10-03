@@ -1,11 +1,12 @@
 import React from 'react'
 
 import { Input } from '../../common/fields'
+import { Button } from '../../common/buttons'
 
 import './LoginPage.css'
 
 export const LoginPage = () => {
-  const [formValues, setFormValues] = React.useState({ username: '213', password: '435' })
+  const [formValues, setFormValues] = React.useState({ username: '213', password: '' })
 
   return (
     <div className='login_page'>
@@ -13,14 +14,25 @@ export const LoginPage = () => {
         <div>header</div>
         <div className='login_page_form_container'>
           <div className='login_page_input_container'>
-            <Input value={formValues.username} />
-            <span>validation</span>
+            <Input
+              value={formValues.username}
+              placeholder='username'
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormValues({ ...formValues, username: e.target.value })
+              }
+            />
           </div>
           <div className='login_page_input_container'>
-            <Input value={formValues.password} />
+            <Input
+              value={formValues.password}
+              placeholder='password'
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormValues({ ...formValues, password: e.target.value })
+              }
+            />
           </div>
           <div>
-            <button>sign in</button>
+            <Button>Sign in</Button>
           </div>
         </div>
       </div>

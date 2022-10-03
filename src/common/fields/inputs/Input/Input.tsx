@@ -1,7 +1,18 @@
 import React from 'react'
 
-interface InputProps extends React.HTMLProps<HTMLInputElement> {}
+import './Input.css'
 
-export const Input: React.FC<InputProps> = (props) => {
-  return <input {...props} />
+interface InputProps extends React.HTMLProps<HTMLInputElement> {
+  isError?: boolean
+  helperText?: string
+}
+
+export const Input: React.FC<InputProps> = ({ isError = false, helperText, ...props }) => {
+  const className = isError ? 'input_error' : ''
+  return (
+    <div>
+      <input className={className} {...props} />
+      {isError && helperText && <div className='input_helper_text'>{helperText}</div>}
+    </div>
+  )
 }
