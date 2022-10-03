@@ -1,0 +1,24 @@
+.login_page {
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_page_container {
+  box-shadow: 0 4px 50px 2px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login_page_form_container {
+  padding: 0 100px;
+}
+.login_page_input_container {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
