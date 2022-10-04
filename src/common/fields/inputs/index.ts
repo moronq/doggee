@@ -1,2 +1,2 @@
 export * from './Input/Input'
-export * from './InputPassword/InputPassord'
+export * from './InputPassword/InputPassword'

@@ -44,7 +44,7 @@ export const LoginPage = () => {
               isError={!!formErrors.username}
               helperText={formErrors.username ?? undefined}
               value={formValues.username}
-              placeholder='username'
+              label='username'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const username = e.target.value
                 setFormValues({ ...formValues, username })
@@ -58,7 +58,7 @@ export const LoginPage = () => {
               isError={!!formErrors.password}
               helperText={formErrors.password ?? undefined}
               value={formValues.password}
-              placeholder='password'
+              label='password'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const password = e.target.value
                 setFormValues({ ...formValues, password })

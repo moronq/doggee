@@ -44,6 +44,8 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/self-closing-comp': ['warn'],
     'import/order': 0,
+    'jsx-a11y/click-events-have-key-events': ['warn'],
+    'jsx-a11y/no-static-element-interactions': ['warn'],
     'simple-import-sort/exports': 1,
     'simple-import-sort/imports': [
       1,
