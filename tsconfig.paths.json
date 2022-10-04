@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "baseUrl": "./src",
+    "paths": {
+      "@common": ["./common"],
+      "@common/*": ["./common/*"],
+      "@pages": ["./pages"],
+      "@static/*": ["./static/*"],
+      "@utils/helpers": ["./utils/helpers"],
+      "@utils/constants": ["./utils/constants"],
+      "@utils/api": ["./utils/api"],
+      "@utils/hooks": ["./utils/hooks"],
+      "@utils/contextes": ["./utils/contextes"],
+      "@features": ["./features"],
+      "@features/*": ["./features/*"]
+    }
+  }
+}

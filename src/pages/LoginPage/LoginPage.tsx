@@ -1,7 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-import { Button } from '../../common/buttons'
-import { Input } from '../../common/fields'
+import { Button } from '@common/buttons'
+import { Input, InputPassword } from '@common/fields'
 
 import styles from './LoginPage.module.css'
 
@@ -53,8 +54,7 @@ export const LoginPage = () => {
             />
           </div>
           <div className={styles.input_container}>
-            <Input
-              type='password'
+            <InputPassword
               isError={!!formErrors.password}
               helperText={formErrors.password ?? undefined}
               value={formValues.password}
@@ -71,7 +71,9 @@ export const LoginPage = () => {
             <Button>Sign in</Button>
           </div>
         </div>
-        <div className={styles.sign_up_container}>Create new account</div>
+        <div className={styles.sign_up_container}>
+          <Link to='/registration'>Create new account</Link>
+        </div>
       </div>
     </div>
   )

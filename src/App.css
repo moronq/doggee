@@ -6,3 +6,17 @@ body {
 *::before {
   box-sizing: border-box;
 }
+
+button,
+input {
+  font-family: inherit;
+  outline: none;
+  background: transparent;
+  border: none;
+}
+a {
+  font-family: inherit;
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+}
