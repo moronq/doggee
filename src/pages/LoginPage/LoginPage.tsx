@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
-import { Input, InputPassword } from '@common/fields'
+import { CheckBox, Input, InputPassword } from '@common/fields'
 
 import styles from './LoginPage.module.css'
 
@@ -28,7 +28,11 @@ const validateLoginForm = (name: keyof typeof loginFormValidateSchema, value: st
 }
 
 export const LoginPage = () => {
-  const [formValues, setFormValues] = React.useState({ username: '', password: '' })
+  const [formValues, setFormValues] = React.useState({
+    username: '',
+    password: '',
+    notMyComputer: false
+  })
   const [formErrors, setFormErrors] = React.useState<{ [key: string]: null | string }>({
     username: null,
     password: null
@@ -64,6 +68,16 @@ export const LoginPage = () => {
                 setFormValues({ ...formValues, password })
                 const error = validateLoginForm('password', password)
                 setFormErrors({ ...formErrors, password: error })
+              }}
+            />
+          </div>
+          <div className={styles.input_container}>
+            <CheckBox
+              checked={formValues.notMyComputer}
+              label='This is not my device'
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                const notMyComputer = event.target.checked
+                setFormValues({ ...formValues, notMyComputer })
               }}
             />
           </div>

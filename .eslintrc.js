@@ -33,6 +33,22 @@ module.exports = {
         unnamedComponents: 'arrow-function'
       }
     ],
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id']
+        }
+      }
+    ],
+    'jsx-a11y/label-has-for': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id']
+        }
+      }
+    ],
     'import/prefer-default-export': 0,
     'react/jsx-props-no-spreading': 0,
     'react/require-default-props': 0,
