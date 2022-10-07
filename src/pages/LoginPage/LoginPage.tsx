@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
+import { useMutation } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
 
@@ -38,13 +39,26 @@ export const LoginPage = () => {
     password: null
   })
 
+  const { isLoading: authIsLoading, mutation: authMutation } = useMutation<typeof formValues>(
+    'http://localhost:3001/auth',
+    'post'
+  )
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.header_container}>DOGGEE</div>
-        <div className={styles.form_container}>
+        <form
+          className={styles.form_container}
+          onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault()
+            const response = await authMutation(formValues)
+            console.log(response)
+          }}
+        >
           <div className={styles.input_container}>
             <Input
+              disabled={authIsLoading}
               isError={!!formErrors.username}
               helperText={formErrors.username ?? undefined}
               value={formValues.username}
@@ -59,6 +73,7 @@ export const LoginPage = () => {
           </div>
           <div className={styles.input_container}>
             <InputPassword
+              disabled={authIsLoading}
               isError={!!formErrors.password}
               helperText={formErrors.password ?? undefined}
               value={formValues.password}
@@ -82,9 +97,11 @@ export const LoginPage = () => {
             />
           </div>
           <div>
-            <Button>Sign in</Button>
+            <Button type='submit' isLoading={authIsLoading}>
+              Sign in
+            </Button>
           </div>
-        </div>
+        </form>
         <div className={styles.sign_up_container}>
           <Link to='/registration'>Create new account</Link>
         </div>

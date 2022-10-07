@@ -26,6 +26,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 0,
     '@typescript-eslint/no-unused-vars': 1,
     'consistent-return': 0,
+    'react/jsx-boolean-value': 0,
     'react/function-component-definition': [
       2,
       {

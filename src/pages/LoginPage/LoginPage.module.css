@@ -22,7 +22,8 @@
 }
 
 .container {
-  height: 500px;
+  width: 500px;
+  height: 600px;
   box-shadow: 0 4px 50px 2px rgba(0, 0, 0, 0.15);
   border-radius: 20px;
   display: flex;
@@ -32,7 +33,8 @@
 }
 
 .form_container {
-  padding: 0 100px;
+  width: 100%;
+  padding: 0 125px;
 }
 
 .input_container {
@@ -42,8 +44,8 @@
 }
 
 .sign_up_container {
-  font-size: 12px;
-  color: #f5c678;
+  font-size: 14px;
+  color: var(--primary);
   font-weight: 600;
   margin-bottom: 15px;
 }

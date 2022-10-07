@@ -23,7 +23,8 @@
   transition: transform 150ms ease-out, font-size 150ms ease-out;
 }
 
-.focused .input_label {
+.input_container:focus-within .input_label,
+.input:not([value='']):not(:focus) ~ .input_label {
   transform: translate(-10%, -80%);
   font-size: 10px;
 }
