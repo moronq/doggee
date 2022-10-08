@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
-import { useMutation } from 'utils/hooks/api'
+import { useMutation, useQuery } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
 
@@ -49,6 +49,8 @@ export const LoginPage = () => {
     'http://localhost:3001/auth',
     'post'
   )
+
+  // const { data } = useQuery('http://localhost:3001/users')
 
   return (
     <div className={styles.page}>

@@ -1,28 +1,21 @@
 import React from 'react'
 
-type Mutation = 'post' | 'put' | 'delete'
-
-export const useMutation = <T, K>(
-  url: string,
-  method: Mutation,
-  config?: Omit<RequestInit, 'method'>
-) => {
+export const useQueryLazy = <K>(url: string, config?: Omit<RequestInit, 'method'>) => {
   const [status, setStatus] = React.useState(0)
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState('')
 
-  const mutation = React.useCallback(async (body: T): Promise<ApiResponse<K>> => {
+  const query = React.useCallback(async (): Promise<ApiResponse<K>> => {
     setIsLoading(true)
     try {
       const response = await fetch(url, {
+        method: 'GET',
         credentials: 'same-origin',
         ...config,
-        method,
         headers: {
           'Content-Type': 'application/json',
           ...(!!config?.headers && config.headers)
-        },
-        ...(!!body && { body: JSON.stringify(body) })
+        }
       })
       setStatus(response.status)
       return await response.json()
@@ -33,5 +26,6 @@ export const useMutation = <T, K>(
       setIsLoading(false)
     }
   }, [])
-  return { mutation, error, isLoading, status }
+
+  return { query, error, isLoading, status }
 }
