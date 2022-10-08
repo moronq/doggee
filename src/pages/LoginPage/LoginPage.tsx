@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
+import { api } from '@utils/api'
 import { useMutation, useQuery } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
@@ -50,7 +51,9 @@ export const LoginPage = () => {
     'post'
   )
 
-  // const { data } = useQuery('http://localhost:3001/users')
+  const { data, isLoading } = useQuery(() => api.get<User[]>('users'))
+  console.log('data', data)
+  console.log('isLoading', isLoading)
 
   return (
     <div className={styles.page}>
