@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
-import { useMutation } from '@utils/hooks'
+import { useMutation } from 'utils/hooks/api'
 
 import styles from './LoginPage.module.css'
 
@@ -28,6 +28,12 @@ const validateLoginForm = (name: keyof typeof loginFormValidateSchema, value: st
   return loginFormValidateSchema[name](value)
 }
 
+interface User {
+  username: string
+  password: string
+  id: string
+}
+
 export const LoginPage = () => {
   const [formValues, setFormValues] = React.useState({
     username: '',
@@ -39,7 +45,7 @@ export const LoginPage = () => {
     password: null
   })
 
-  const { isLoading: authIsLoading, mutation: authMutation } = useMutation<typeof formValues>(
+  const { isLoading: authIsLoading, mutation: authMutation } = useMutation<typeof formValues, User>(
     'http://localhost:3001/auth',
     'post'
   )
