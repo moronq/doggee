@@ -1,11 +1,12 @@
 .input_container {
-  background-color: rgba(237, 237, 237, 0.7);
+  background-color: var(--background-color-field);
   border-radius: 5px;
   padding: 20px 15px 9px;
   width: 100%;
   position: relative;
   height: 48px;
   cursor: text;
+  transition: var(--transition);
 }
 
 .input_container:hover {
@@ -13,6 +14,7 @@
 }
 
 .input_label {
+  cursor: text;
   position: absolute;
   left: 15px;
   top: 15px;
@@ -42,7 +44,7 @@
 }
 
 .input_container:hover {
-  background-color: #ededed;
+  background-color: var(--color-field-focused);
 }
 
 .error,

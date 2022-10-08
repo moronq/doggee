@@ -1,25 +1,26 @@
 .button {
   height: 48px;
-  background: var(--primary);
+  background: var(--color-accent);
   border-radius: 5px;
   align-items: center;
   border: none;
   color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-button);
   font-size: 14px;
   font-weight: 600;
   width: 100%;
   display: flex;
   justify-content: center;
+  transition: var(--transition);
 }
 
 .button:hover {
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--hadow-button-hover);
 }
 
 .button:active {
-  background: var(--primary7);
+  background: var(--color-accent7);
 }
 
 .dot_flashing {

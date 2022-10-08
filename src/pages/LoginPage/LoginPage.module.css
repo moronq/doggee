@@ -45,7 +45,7 @@
 
 .sign_up_container {
   font-size: 14px;
-  color: var(--primary);
+  color: var(--color-accent);
   font-weight: 600;
   margin-bottom: 15px;
 }
