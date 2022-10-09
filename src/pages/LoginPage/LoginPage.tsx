@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
-import { IntlText, useIntl } from '@features'
+import { IntlText } from '@features'
 import { api } from '@utils/api'
 import { setCookie } from '@utils/helpers'
 import { useMutation } from '@utils/hooks'
@@ -109,7 +109,6 @@ export const LoginPage = () => {
           <div>
             <Button type='submit' isLoading={authIsLoading}>
               <IntlText path='button.signIn' values={{ test: 213124 }} />
-              {/* {intl.translateMessage('button.signIn', { test: 'bla bla 123' })} */}
             </Button>
           </div>
         </form>

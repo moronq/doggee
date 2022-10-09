@@ -9,7 +9,7 @@ interface IntlTextProps extends TranslateMessage {
 
 export const IntlText: React.FC<IntlTextProps> = ({ path, values, children }) => {
   const intl = useIntl()
-  if (typeof children === 'function') {
+  if (children && typeof children === 'function') {
     return <>{children(intl.translateMessage(path, values))}</>
   }
 

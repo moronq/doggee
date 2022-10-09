@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { IntlProvider } from '@features'
 import { LoginPage, NotFoundPage, RegistrationPage } from '@pages'
-import { deleteCookie, getCookie } from '@utils/helpers'
+import { deleteCookie, getCookie, getLocale, getMessages } from '@utils/helpers'
 
 import './App.css'
 
@@ -47,8 +47,11 @@ const App = () => {
 
   if (isLoading) return null
 
+  const locale = getLocale()
+  const messages = getMessages(locale)
+
   return (
-    <IntlProvider locale='ru' messages={{ 'button.signIn': 'Sign in' }}>
+    <IntlProvider locale={locale} messages={messages}>
       <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
     </IntlProvider>
   )
