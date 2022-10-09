@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
 import { api } from '@utils/api'
+import { setCookie } from '@utils/helpers'
 import { useMutation, useQuery } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
@@ -39,7 +40,7 @@ export const LoginPage = () => {
   const [formValues, setFormValues] = React.useState({
     username: '',
     password: '',
-    notMyComputer: false
+    isNotMyDevice: false
   })
   const [formErrors, setFormErrors] = React.useState<{ [key: string]: null | string }>({
     username: null,
@@ -47,13 +48,10 @@ export const LoginPage = () => {
   })
 
   const { isLoading: authIsLoading, mutation: authMutation } = useMutation<typeof formValues, User>(
-    'http://localhost:3001/auth',
-    'post'
+    (values) => api.post('auth', values)
   )
 
-  const { data, isLoading } = useQuery(() => api.get<User[]>('users'))
-  console.log('data', data)
-  console.log('isLoading', isLoading)
+  // const { data, isLoading } = useQuery(() => api.get<User[]>('users'))
 
   return (
     <div className={styles.page}>
@@ -64,7 +62,9 @@ export const LoginPage = () => {
           onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault()
             const response = await authMutation(formValues)
-            console.log(response)
+            if (response && formValues.isNotMyDevice) {
+              setCookie('doggee-isNotMyDevice', new Date().getTime() + 30 * 60000)
+            }
           }}
         >
           <div className={styles.input_container}>
@@ -99,11 +99,11 @@ export const LoginPage = () => {
           </div>
           <div className={styles.input_container}>
             <CheckBox
-              checked={formValues.notMyComputer}
+              checked={formValues.isNotMyDevice}
               label='This is not my device'
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                const notMyComputer = event.target.checked
-                setFormValues({ ...formValues, notMyComputer })
+                const isNotMyDevice = event.target.checked
+                setFormValues({ ...formValues, isNotMyDevice })
               }}
             />
           </div>

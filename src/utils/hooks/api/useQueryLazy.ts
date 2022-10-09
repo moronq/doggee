@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const useQueryLazy = <K>(request: <T>() => Promise<any>) => {
+export const useQueryLazy = <K>(request: () => Promise<any>) => {
   const [status, setStatus] = React.useState(0)
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState('')
@@ -8,7 +8,7 @@ export const useQueryLazy = <K>(request: <T>() => Promise<any>) => {
   const query = React.useCallback(async (): Promise<ApiResponse<K>> => {
     setIsLoading(true)
     try {
-      return await request<K>().then(async (response) => {
+      return await request().then(async (response) => {
         setStatus(response.status)
         setIsLoading(false)
         return response.data

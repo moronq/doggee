@@ -32,7 +32,7 @@ export class API {
   post(endpoint: string, body: Record<string, any>, options: RequestInit = {}) {
     return this.request(endpoint, {
       ...options,
-      method: 'GET',
+      method: 'POST',
       ...(!!body && { body: JSON.stringify(body) })
     })
   }

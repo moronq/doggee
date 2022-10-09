@@ -63,7 +63,9 @@ module.exports = {
     'import/order': 0,
     'jsx-a11y/click-events-have-key-events': ['warn'],
     'jsx-a11y/no-static-element-interactions': ['warn'],
+    'no-useless-escape': 0,
     'simple-import-sort/exports': 1,
+    'prefer-template': 0,
     'simple-import-sort/imports': [
       1,
       {
