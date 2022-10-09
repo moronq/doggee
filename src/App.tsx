@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
+import { IntlProvider } from '@features'
 import { LoginPage, NotFoundPage, RegistrationPage } from '@pages'
 import { deleteCookie, getCookie } from '@utils/helpers'
 
@@ -46,7 +47,11 @@ const App = () => {
 
   if (isLoading) return null
 
-  return <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
+  return (
+    <IntlProvider locale='ru' messages={{ 'button.signIn': 'Sign in' }}>
+      <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
+    </IntlProvider>
+  )
 }
 
 export default App

@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
+import { IntlText, useIntl } from '@features'
 import { api } from '@utils/api'
 import { setCookie } from '@utils/helpers'
-import { useMutation, useQuery } from '@utils/hooks'
+import { useMutation } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
 
@@ -50,8 +51,6 @@ export const LoginPage = () => {
   const { isLoading: authIsLoading, mutation: authMutation } = useMutation<typeof formValues, User>(
     (values) => api.post('auth', values)
   )
-
-  // const { data, isLoading } = useQuery(() => api.get<User[]>('users'))
 
   return (
     <div className={styles.page}>
@@ -109,7 +108,8 @@ export const LoginPage = () => {
           </div>
           <div>
             <Button type='submit' isLoading={authIsLoading}>
-              Sign in
+              <IntlText path='button.signIn' values={{ test: 213124 }} />
+              {/* {intl.translateMessage('button.signIn', { test: 'bla bla 123' })} */}
             </Button>
           </div>
         </form>

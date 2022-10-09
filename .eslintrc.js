@@ -66,6 +66,9 @@ module.exports = {
     'no-useless-escape': 0,
     'simple-import-sort/exports': 1,
     'prefer-template': 0,
+    'guard-for-in': 0,
+    'no-restricted-syntax': 0,
+    'react/jsx-no-useless-fragment': 0,
     'simple-import-sort/imports': [
       1,
       {
