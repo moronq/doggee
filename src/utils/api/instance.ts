@@ -29,8 +29,8 @@ export class API {
     return this.request<T>(endpoint, { ...options, method: 'GET' })
   }
 
-  post(endpoint: string, body: Record<string, any>, options: RequestInit = {}) {
-    return this.request(endpoint, {
+  post<T>(endpoint: string, body: Record<string, any>, options: RequestInit = {}) {
+    return this.request<T>(endpoint, {
       ...options,
       method: 'POST',
       ...(!!body && { body: JSON.stringify(body) })

@@ -16,11 +16,16 @@
 
 .button:hover {
   cursor: pointer;
-  box-shadow: var(--hadow-button-hover);
+  box-shadow: var(--shadow-button-hover);
 }
 
 .button:active {
   background: var(--color-accent7);
+}
+
+.button:disabled {
+  background: var(--color-accent7);
+  box-shadow: var(--shadow-button-hover);
 }
 
 .dot_flashing {

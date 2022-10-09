@@ -10,15 +10,13 @@ export const useMutation = <T, K>(request: (body: T) => Promise<any>) => {
     try {
       return await request(body).then(async (response) => {
         setStatus(response.status)
-        console.log(body)
         setIsLoading(false)
         return response.data
       })
     } catch (e) {
       setError((e as Error).message)
-      return { success: false, data: { message: (e as Error).message } }
-    } finally {
       setIsLoading(false)
+      return { success: false, data: { message: (e as Error).message } }
     }
   }, [])
   return { mutation, error, isLoading, status }
