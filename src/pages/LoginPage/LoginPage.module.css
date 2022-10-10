@@ -1,6 +1,6 @@
 .page {
+  background: var(--background-color);
   height: 100vh;
-  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,6 +25,7 @@
   width: 500px;
   height: 600px;
   box-shadow: var(--shadow-container);
+  background: var(--background-color);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
