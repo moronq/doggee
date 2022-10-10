@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
-import { IntlText } from '@features'
+import { IntlText, useTheme } from '@features'
 import { api } from '@utils/api'
 import { setCookie } from '@utils/helpers'
 import { useMutation } from '@utils/hooks'
@@ -53,8 +53,18 @@ export const LoginPage = () => {
     ApiResponse<User[]>
   >((values) => api.post('auth', values))
 
+  const { theme, setTheme } = useTheme()
+  console.log(theme)
+
   return (
     <div className={styles.page}>
+      <button
+        onClick={() => {
+          setTheme(theme === 'dark' ? 'light' : 'dark')
+        }}
+      >
+        change theme
+      </button>
       <div className={styles.container}>
         <div className={styles.header_container}>DOGGEE</div>
         <form

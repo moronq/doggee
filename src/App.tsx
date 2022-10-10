@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
-import { IntlProvider } from '@features'
+import { IntlProvider, ThemeProvider } from '@features'
 import { LoginPage, NotFoundPage, RegistrationPage } from '@pages'
 import { deleteCookie, getCookie, getLocale, getMessages } from '@utils/helpers'
 
@@ -54,9 +54,11 @@ const App = () => {
   if (isLoading) return null
 
   return (
-    <IntlProvider locale={locale} messages={messages}>
-      <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
-    </IntlProvider>
+    <ThemeProvider theme='light'>
+      <IntlProvider locale={locale} messages={messages}>
+        <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
+      </IntlProvider>
+    </ThemeProvider>
   )
 }
 
