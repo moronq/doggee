@@ -48,9 +48,10 @@ export const LoginPage = () => {
     password: null
   })
 
-  const { isLoading: authIsLoading, mutation: authMutation } = useMutation<typeof formValues, User>(
-    (values) => api.post('auth', values)
-  )
+  const { isLoading: authIsLoading, mutationAsync: authMutation } = useMutation<
+    typeof formValues,
+    ApiResponse<User[]>
+  >((values) => api.post('auth', values))
 
   return (
     <div className={styles.page}>
@@ -113,7 +114,9 @@ export const LoginPage = () => {
           </div>
         </form>
         <div className={styles.sign_up_container}>
-          <Link to='/registration'>Create new account</Link>
+          <Link to='/registration'>
+            <IntlText path='page.login.createNewAccount' />
+          </Link>
         </div>
       </div>
     </div>

@@ -23,5 +23,5 @@ export const useIntl = () => {
     }
     return translate
   }
-  return { ...intl, translateMessage }
+  return { locale: intl.locale, translateMessage }
 }

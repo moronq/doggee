@@ -28,6 +28,9 @@ const MainRoutes = () => {
 const App = () => {
   const [isAuth, setIsAuth] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [messages, setMessages] = React.useState<Record<string, string>>({})
+
+  const locale = getLocale()
 
   React.useEffect(() => {
     const authCookie = getCookie('doggee-auth-token')
@@ -42,13 +45,13 @@ const App = () => {
     if (authCookie && !isNotMyDevice) {
       setIsAuth(true)
     }
-    setIsLoading(false)
+    getMessages(locale).then((messages) => {
+      setMessages(messages)
+      setIsLoading(false)
+    })
   }, [])
 
   if (isLoading) return null
-
-  const locale = getLocale()
-  const messages = getMessages(locale)
 
   return (
     <IntlProvider locale={locale} messages={messages}>

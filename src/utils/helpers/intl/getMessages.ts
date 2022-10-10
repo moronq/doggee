@@ -1,11 +1,12 @@
+import type { AcceptLocales } from './getLocale'
 import { DEFAULT_LOCALE } from './getLocale'
 
-const messages = {
-  'en-US': { 'button.signIn': 'Sign In' },
-  ru: { 'button.signIn': 'Войти' }
-}
-
-export const getMessages = (locale: keyof typeof messages) => {
-  if (!messages[locale]) return messages[DEFAULT_LOCALE]
-  return messages[locale]
+export const getMessages = async (locale: AcceptLocales) => {
+  try {
+    const messages = await import(`@static/locales/${locale}.json`)
+    return messages
+  } catch (e) {
+    const defaultMessages = await import(`@static/locales/${DEFAULT_LOCALE}.json`)
+    return defaultMessages
+  }
 }
