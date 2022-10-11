@@ -3,7 +3,7 @@ export const setCookie = (
   value: string | number | boolean | null,
   props: $TSFixMe = {}
 ) => {
-  const cookieOptions: $TSFixMe = {}
+  const cookieOptions: $TSFixMe = props
 
   if (typeof props.expires === 'number' && props.expires) {
     const date = new Date()
@@ -16,16 +16,16 @@ export const setCookie = (
   }
 
   const cookieValue = value ? encodeURIComponent(value) : null
-  // let updateCookie = name + '=' + cookieValue
+  let updatedCookie = `${name}=${cookieValue}`
+  Object.keys(cookieOptions).forEach((propName) => {
+    updatedCookie += `; ${propName}`
 
-  // for (const propName in props) {
-  //   if (propName) {
-  //     updateCookie += '; ' + propName
-  //     const propValue = props[propName]
-  //     if (propValue !== true) {
-  //       updateCookie += '=' + propValue
-  //     }
-  //   }
-  // }
-  // document.cookie = updateCookie
+    const propValue = cookieOptions[propName]
+
+    if (propValue !== true) {
+      updatedCookie += `=${propValue}`
+    }
+  })
+
+  document.cookie = updatedCookie
 }

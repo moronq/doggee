@@ -1,6 +1,8 @@
 import React from 'react'
 
-import type { ThemeContextProps } from './ThemeContext'
+import { setCookie } from '@utils/helpers'
+
+import type { Theme, ThemeContextProps } from './ThemeContext'
 import { ThemeContext } from './ThemeContext'
 
 import darkTheme from '@static/theme/dark/dark.module.css'
@@ -12,10 +14,13 @@ type ThemeProviderProps = Omit<ThemeContextProps, 'setTheme'> & {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ theme, children }) => {
   const [currentTheme, setCurrentTheme] = React.useState(theme)
-  const value = React.useMemo(
-    () => ({ theme: currentTheme, setTheme: setCurrentTheme }),
-    [currentTheme]
-  )
+
+  const setTheme = (theme: Theme) => {
+    setCookie('doggee-theme', theme)
+    setCurrentTheme(theme)
+  }
+
+  const value = React.useMemo(() => ({ theme: currentTheme, setTheme }), [currentTheme])
 
   return (
     <ThemeContext.Provider value={value}>
