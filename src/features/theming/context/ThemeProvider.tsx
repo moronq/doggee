@@ -3,8 +3,8 @@ import React from 'react'
 import type { ThemeContextProps } from './ThemeContext'
 import { ThemeContext } from './ThemeContext'
 
-import darkTheme from '../themes/dark.module.css'
-import lightTheme from '../themes/light.module.css'
+import darkTheme from '@static/theme/dark/dark.module.css'
+import lightTheme from '@static/theme/light/light.module.css'
 
 type ThemeProviderProps = Omit<ThemeContextProps, 'setTheme'> & {
   children: React.ReactNode
