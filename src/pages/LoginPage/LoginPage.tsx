@@ -15,21 +15,17 @@ const validateIsEmpty = (value: string) => {
   return null
 }
 
-const validateUsername = (value: string) => {
-  return validateIsEmpty(value)
-}
-const validatePassword = (value: string) => {
-  return validateIsEmpty(value)
-}
+const validateUsername = (value: string) => validateIsEmpty(value)
+
+const validatePassword = (value: string) => validateIsEmpty(value)
 
 const loginFormValidateSchema = {
   username: validateUsername,
   password: validatePassword
 }
 
-const validateLoginForm = (name: keyof typeof loginFormValidateSchema, value: string) => {
-  return loginFormValidateSchema[name](value)
-}
+const validateLoginForm = (name: keyof typeof loginFormValidateSchema, value: string) =>
+  loginFormValidateSchema[name](value)
 
 interface User {
   username: string

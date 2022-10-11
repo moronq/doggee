@@ -7,23 +7,19 @@ import { deleteCookie, getCookie, getLocale, getMessages } from '@utils/helpers'
 
 import './App.css'
 
-const AuthRoutes = () => {
-  return (
-    <Routes>
-      <Route path='/auth' element={<LoginPage />} />
-      <Route path='/registration' element={<RegistrationPage />} />
-      <Route path='*' element={<Navigate to='/auth' />} />
-    </Routes>
-  )
-}
+const AuthRoutes = () => (
+  <Routes>
+    <Route path='/auth' element={<LoginPage />} />
+    <Route path='/registration' element={<RegistrationPage />} />
+    <Route path='*' element={<Navigate to='/auth' />} />
+  </Routes>
+)
 
-const MainRoutes = () => {
-  return (
-    <Routes>
-      <Route path='*' element={<NotFoundPage />} />
-    </Routes>
-  )
-}
+const MainRoutes = () => (
+  <Routes>
+    <Route path='*' element={<NotFoundPage />} />
+  </Routes>
+)
 
 const App = () => {
   const [isAuth, setIsAuth] = React.useState(false)

@@ -22,7 +22,6 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'simple-import-sort', 'prettier'],
   rules: {
-    'arrow-body-style': 'off',
     '@typescript-eslint/no-shadow': 0,
     '@typescript-eslint/no-unused-vars': 1,
     'consistent-return': 0,

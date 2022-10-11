@@ -2,11 +2,6 @@ import React from 'react'
 
 import { IntlContext } from '@features'
 
-export interface TranslateMessage {
-  path: string
-  values?: Record<string, string | number | boolean>
-}
-
 export const useIntl = () => {
   const intl = React.useContext(IntlContext)
 

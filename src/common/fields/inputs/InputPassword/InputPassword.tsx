@@ -16,18 +16,18 @@ export const InputPassword: React.FC<InputProps> = ({
   return (
     <>
       <div
+        aria-hidden='true'
         aria-disabled={props.disabled}
         className={`${inputStyles.input_container} ${isError ? inputStyles.input_container : ''}`}
         onClick={() => inputRef.current?.focus()}
       >
         <input
           ref={inputRef}
-          id='inputPasword'
           className={inputStyles.input}
           {...props}
           type={showPasswordToggle && showPassword ? 'text' : 'password'}
         />
-        <label htmlFor='inputPasword' className={`${inputStyles.input_label}`}>
+        <label htmlFor={props.id} className={`${inputStyles.input_label}`}>
           {label}
         </label>
         {showPasswordToggle && (
