@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
 import { IntlText, useTheme } from '@features'
+import { useForm } from '@utils'
 import { api } from '@utils/api'
 import { setCookie } from '@utils/helpers'
 import { useMutation } from '@utils/hooks'
@@ -24,33 +25,43 @@ const loginFormValidateSchema = {
   password: validatePassword
 }
 
-const validateLoginForm = (name: keyof typeof loginFormValidateSchema, value: string) =>
-  loginFormValidateSchema[name](value)
-
 interface User {
   username: string
   password: string
   id: string
 }
 
-export const LoginPage = () => {
-  const [formValues, setFormValues] = React.useState({
-    username: '',
-    password: '',
-    isNotMyDevice: false
-  })
-  const [formErrors, setFormErrors] = React.useState<{ [key: string]: null | string }>({
-    username: null,
-    password: null
-  })
+interface FormValues {
+  username: string
+  password: string
+  isNotMyDevice: boolean
+}
 
+export const LoginPage = () => {
   const { isLoading: authIsLoading, mutationAsync: authMutation } = useMutation<
-    typeof formValues,
+    FormValues,
     ApiResponse<User[]>
   >((values) => api.post('auth', values))
 
+  const { values, errors, setFieldValues, handleSubmit } = useForm<FormValues>({
+    initialValues: {
+      username: '',
+      password: '',
+      isNotMyDevice: false
+    },
+    validateSchema: loginFormValidateSchema,
+    validateOnChange: true,
+    onSubmit: async (values) => {
+      console.log('values', values)
+      const response = await authMutation(values)
+      if (response && values.isNotMyDevice) {
+        setCookie('doggee-isNotMyDevice', new Date().getTime() + 30 * 60000)
+      }
+      console.log(response)
+    }
+  })
+
   const { theme, setTheme } = useTheme()
-  console.log(theme)
 
   return (
     <div className={styles.page}>
@@ -63,53 +74,40 @@ export const LoginPage = () => {
       </button>
       <div className={styles.container}>
         <div className={styles.header_container}>DOGGEE</div>
-        <form
-          className={styles.form_container}
-          onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault()
-            const response = await authMutation(formValues)
-            if (response && formValues.isNotMyDevice) {
-              setCookie('doggee-isNotMyDevice', new Date().getTime() + 30 * 60000)
-            }
-          }}
-        >
+        <form className={styles.form_container} onSubmit={handleSubmit}>
           <div className={styles.input_container}>
             <Input
               disabled={authIsLoading}
-              isError={!!formErrors.username}
-              helperText={formErrors.username ?? undefined}
-              value={formValues.username}
+              isError={!!errors?.username}
+              helperText={errors?.username ?? undefined}
+              value={values.username}
               label='username'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const username = e.target.value
-                setFormValues({ ...formValues, username })
-                const error = validateLoginForm('username', username)
-                setFormErrors({ ...formErrors, username: error })
+                setFieldValues('username', username)
               }}
             />
           </div>
           <div className={styles.input_container}>
             <InputPassword
               disabled={authIsLoading}
-              isError={!!formErrors.password}
-              helperText={formErrors.password ?? undefined}
-              value={formValues.password}
+              isError={!!errors?.password}
+              helperText={errors?.password ?? undefined}
+              value={values.password}
               label='password'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const password = e.target.value
-                setFormValues({ ...formValues, password })
-                const error = validateLoginForm('password', password)
-                setFormErrors({ ...formErrors, password: error })
+                setFieldValues('password', password)
               }}
             />
           </div>
           <div className={styles.input_container}>
             <CheckBox
-              checked={formValues.isNotMyDevice}
+              checked={values.isNotMyDevice}
               label='This is not my device'
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const isNotMyDevice = event.target.checked
-                setFormValues({ ...formValues, isNotMyDevice })
+                setFieldValues('isNotMyDevice', isNotMyDevice)
               }}
             />
           </div>
