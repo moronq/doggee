@@ -1,4 +1,11 @@
 {
+  "button.signIn": "Войти",
+  "button.done": "Готово",
+  "field.checkbox.isNotMyDevice.label": "Не мой компьютер",
+  "field.input.username.label": "Имя пользователя",
+  "field.input.password.label": "Пароль",
+  "field.input.passwordAgain.label": "Повторите пароль",
   "page.login.createNewAccount": "Создать аккаунт",
-  "button.signIn": "Войти"
+  "page.registration.fillYourLoginData": "Введите свои данные",
+  "page.registration.iAlreadyHaveAnAccount": "У меня уже есть аккаунт"
 }

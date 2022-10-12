@@ -23,8 +23,8 @@ export const useForm = <Values extends Object>({
     setValues({ ...values, [field]: value })
     const validateSchemaExistForField = validateSchema && validateSchema[field]
     if (!validateSchemaExistForField || !validateOnChange) return
-    // @ts-ignore
-    const error = validateSchema[field](value)
+
+    const error = validateSchema[field]!(value)
     setErrors({ ...errors, [field]: error })
   }
 

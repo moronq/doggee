@@ -25,10 +25,14 @@
   top: 15px;
   z-index: 1;
   color: var(--color-placeholder);
-  text-transform: capitalize;
   font-size: 14px;
   transition: transform 150ms ease-out, font-size 150ms ease-out;
 }
+
+.input_label::first-letter {
+  text-transform: uppercase;
+}
+
 .input_container[aria-disabled='true'] .input_label {
   cursor: default;
 }

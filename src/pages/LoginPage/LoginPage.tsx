@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
-import { IntlText, useTheme } from '@features'
+import { IntlText, useIntl, useTheme } from '@features'
 import { useForm } from '@utils'
 import { api } from '@utils/api'
 import { setCookie } from '@utils/helpers'
@@ -62,6 +62,7 @@ export const LoginPage = () => {
   })
 
   const { theme, setTheme } = useTheme()
+  const { translateMessage } = useIntl()
 
   return (
     <div className={styles.page}>
@@ -81,7 +82,7 @@ export const LoginPage = () => {
               isError={!!errors?.username}
               helperText={errors?.username ?? undefined}
               value={values.username}
-              label='username'
+              label={translateMessage('field.input.username.label')}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const username = e.target.value
                 setFieldValues('username', username)
@@ -94,7 +95,7 @@ export const LoginPage = () => {
               isError={!!errors?.password}
               helperText={errors?.password ?? undefined}
               value={values.password}
-              label='password'
+              label={translateMessage('field.input.password.label')}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const password = e.target.value
                 setFieldValues('password', password)
@@ -104,18 +105,16 @@ export const LoginPage = () => {
           <div className={styles.input_container}>
             <CheckBox
               checked={values.isNotMyDevice}
-              label='This is not my device'
+              label={translateMessage('field.checkbox.isNotMyDevice.label')}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const isNotMyDevice = event.target.checked
                 setFieldValues('isNotMyDevice', isNotMyDevice)
               }}
             />
           </div>
-          <div>
-            <Button type='submit' isLoading={authIsLoading}>
-              <IntlText path='button.signIn' values={{ test: 213124 }} />
-            </Button>
-          </div>
+          <Button type='submit' isLoading={authIsLoading}>
+            <IntlText path='button.signIn' values={{ test: 213124 }} />
+          </Button>
         </form>
         <div className={styles.sign_up_container}>
           <Link to='/registration'>

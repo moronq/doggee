@@ -14,7 +14,7 @@
   height: 150px;
   color: white;
   background-image: var(--images-auth-header);
-  background-size: 100%;
+  background-size: cover;
   border-radius: 20px 20px 0px 0px;
   padding: 16px;
   font-size: 40px;
