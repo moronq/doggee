@@ -11,7 +11,7 @@ import { useMutation } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
 
-const validateIsEmpty = (value: string) => {
+export const validateIsEmpty = (value: string) => {
   if (!value) return 'field required'
   return null
 }
@@ -23,12 +23,6 @@ const validatePassword = (value: string) => validateIsEmpty(value)
 const loginFormValidateSchema = {
   username: validateUsername,
   password: validatePassword
-}
-
-interface User {
-  username: string
-  password: string
-  id: string
 }
 
 interface FormValues {

@@ -14,6 +14,7 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, ...props })
   return (
     <Input
       mask={/^[a-zA-Z0-9!;,.]+$/g}
+      type={showPassword ? 'text' : 'password'}
       value={value}
       {...(showPasswordToggle && {
         components: {

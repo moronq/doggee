@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import { Button } from '@common/buttons'
 import { Input, InputPassword } from '@common/fields'
 import { IntlText, useIntl } from '@features'
-import { PasswordRules } from '@pages'
-import { useForm } from '@utils'
+import { PasswordRules, validateIsEmpty } from '@pages'
+import { api, useForm, useMutation } from '@utils'
 
 import styles from './RegistrationPage.module.css'
 
@@ -15,17 +15,38 @@ interface RegistrationFormValues {
   passwordAgain: string
 }
 
+const registrationFormValidateSchema = {
+  username: (value: string) => validateIsEmpty(value),
+  password: (value: string) => validateIsEmpty(value)
+}
+
 export const RegistrationPage: React.FC = () => {
+  const [step, setStep] = React.useState<'registration' | 'pets' | 'profile' | 'check'>('profile')
+
+  const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation<
+    Omit<RegistrationFormValues, 'passwordAgain'>,
+    ApiResponse<User[]>
+  >((values) => api.post('registration', values))
+
   const { values, errors, setFieldValues, handleSubmit } = useForm<RegistrationFormValues>({
     initialValues: {
       username: '',
       password: '',
       passwordAgain: ''
+    },
+    validateSchema: registrationFormValidateSchema,
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      console.log('values', values)
+      const response = await registrationMutation({
+        password: values.password,
+        username: values.username
+      })
+
+      console.log(response)
     }
   })
   const { translateMessage } = useIntl()
-
-  const authIsLoading = false
 
   return (
     <div className={styles.page}>
@@ -37,7 +58,7 @@ export const RegistrationPage: React.FC = () => {
           <form className={styles.form_container} onSubmit={handleSubmit}>
             <div className={styles.input_container}>
               <Input
-                disabled={authIsLoading}
+                disabled={registrationLoading}
                 isError={!!errors?.username}
                 helperText={errors?.username ?? undefined}
                 value={values.username}
@@ -50,7 +71,7 @@ export const RegistrationPage: React.FC = () => {
             </div>
             <div className={styles.input_container}>
               <InputPassword
-                disabled={authIsLoading}
+                disabled={registrationLoading}
                 isError={!!errors?.password}
                 helperText={errors?.password ?? undefined}
                 value={values.password}
@@ -63,7 +84,7 @@ export const RegistrationPage: React.FC = () => {
             </div>
             <div className={styles.input_container}>
               <InputPassword
-                disabled={authIsLoading}
+                disabled={registrationLoading}
                 isError={!!errors?.passwordAgain}
                 helperText={errors?.passwordAgain ?? undefined}
                 value={values.passwordAgain}
@@ -74,7 +95,7 @@ export const RegistrationPage: React.FC = () => {
                 }}
               />
             </div>
-            <Button type='submit' isLoading={authIsLoading}>
+            <Button type='submit' isLoading={registrationLoading}>
               <IntlText path='button.done' values={{ test: 213124 }} />
             </Button>
           </form>
