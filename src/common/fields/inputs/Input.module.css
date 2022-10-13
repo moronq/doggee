@@ -1,12 +1,16 @@
+.field_container {
+  position: relative;
+}
+
 .input_container {
   background-color: var(--background-color-field);
   border-radius: 5px;
   padding: 20px 15px 9px;
   width: 100%;
-  position: relative;
   height: 48px;
   cursor: text;
   transition: var(--transition);
+  display: flex;
 }
 
 .input_container[aria-disabled='true'] {
@@ -27,6 +31,10 @@
   color: var(--color-placeholder);
   font-size: 14px;
   transition: transform 150ms ease-out, font-size 150ms ease-out;
+}
+
+.input_error {
+  background: var(--background-color-field-validation);
 }
 
 .input_label::first-letter {

@@ -7,5 +7,13 @@
   "field.input.passwordAgain.label": "Повторите пароль",
   "page.login.createNewAccount": "Создать аккаунт",
   "page.registration.fillYourLoginData": "Введите свои данные",
-  "page.registration.iAlreadyHaveAnAccount": "У меня уже есть аккаунт"
+  "page.registration.iAlreadyHaveAnAccount": "У меня уже есть аккаунт",
+  "page.registration.passwordRules.passwordMust": "Пароль должен",
+  "page.registration.passwordRules.containNumbers": "содержать <rule>цифры</rule>",
+  "page.registration.passwordRules.containUppercaseLetter": "содержать <rule>заглавные</rule> символы",
+  "page.registration.passwordRules.containLowercaseLetter": "содержать <rule>строчные</rule> символы",
+  "page.registration.passwordRules.contain8characters": "содержать минимум <rule>8</rule> символов",
+  "page.registration.passwordRules.passwordMustMatch": "Пароли должны <rule>совпадать</rule>",
+
+  "validation.required": "обязательно поле"
 }

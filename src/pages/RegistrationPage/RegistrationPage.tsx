@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@common/buttons'
 import { Input, InputPassword } from '@common/fields'
 import { IntlText, useIntl } from '@features'
+import { PasswordRules } from '@pages'
 import { useForm } from '@utils'
 
 import styles from './RegistrationPage.module.css'
@@ -12,43 +13,6 @@ interface RegistrationFormValues {
   username: string
   password: string
   passwordAgain: string
-}
-
-interface RegistrationRulesProps {
-  password: string
-  passwordAgain: string
-}
-
-export const RegistrationRules: React.FC<RegistrationRulesProps> = ({
-  password,
-  passwordAgain
-}) => {
-  const [rules, setRules] = React.useState({
-    containNumbers: true,
-    containUpercase: true,
-    containLowercase: true,
-    contain8Characters: true
-  })
-  return (
-    <div className={styles.panel_data}>
-      <div>Password must:</div>
-      <div>
-        contain <span className={styles.password_correct_rule}>numbers</span>
-      </div>
-      <div>
-        contain <span className={styles.password_incorrect_rule}>uppercase</span> letter
-      </div>
-      <div>
-        contain <span className={styles.password_incorrect_rule}>lowercase</span> letter
-      </div>
-      <div>
-        contain at least <span className={styles.password_incorrect_rule}>8</span> characters
-      </div>
-      <div>
-        password must <span className={styles.password_incorrect_rule}>match</span>
-      </div>
-    </div>
-  )
 }
 
 export const RegistrationPage: React.FC = () => {
@@ -117,7 +81,13 @@ export const RegistrationPage: React.FC = () => {
         </div>
         <div className={styles.panel_container}>
           <div className={styles.panel_header}>doggee</div>
-          <RegistrationRules password={values.password} passwordAgain={values.passwordAgain} />
+          <div className={styles.panel_data}>
+            <PasswordRules
+              password={values.password}
+              passwordAgain={values.passwordAgain}
+              hasPasswordErrors={!!errors?.password}
+            />
+          </div>
           <div className={styles.panel_have_account}>
             <Link to='/auth'>
               <IntlText path='page.registration.iAlreadyHaveAnAccount' />

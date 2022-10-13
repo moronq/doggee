@@ -76,12 +76,3 @@
   flex-direction: column;
   gap: 10px;
 }
-.password_incorrect_rule {
-  font-weight: 600;
-  color: var(--color-additional);
-}
-
-.password_correct_rule {
-  font-weight: 600;
-  color: var(--color-accent);
-}

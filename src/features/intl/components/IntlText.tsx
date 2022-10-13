@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useIntl } from '@features'
+import { useIntl } from '../hooks/useIntl'
 
 interface IntlTextProps extends TranslateMessage {
   children?: (message: Message | React.ReactNode) => React.ReactNode
@@ -9,7 +9,7 @@ interface IntlTextProps extends TranslateMessage {
 export const IntlText: React.FC<IntlTextProps> = ({ path, values, children }) => {
   const intl = useIntl()
   const withFunctionalKeys =
-    values && !!Object.keys(values).filter((key) => typeof values[key] === 'function').length
+    !!values && !!Object.keys(values).filter((key) => typeof values[key] === 'function').length
 
   const translateMessageWithTags = (
     message: Message,
@@ -33,10 +33,10 @@ export const IntlText: React.FC<IntlTextProps> = ({ path, values, children }) =>
     return (
       <>
         {messageParts.map((messagePart, index) => (
-          <>
+          <React.Fragment key={messagePart}>
             {!!index && result}
             {translateMessageWithTags(messagePart, filteredValues)}
-          </>
+          </React.Fragment>
         ))}
       </>
     )

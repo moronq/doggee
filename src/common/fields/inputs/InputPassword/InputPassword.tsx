@@ -1,45 +1,38 @@
 import React from 'react'
 
-import inputStyles from '../Input.module.css'
-import inputPasswordStyles from './InputPassword.module.css'
+import type { InputProps } from '../Input/Input'
+import { Input } from '../Input/Input'
 
-export const InputPassword: React.FC<InputProps> = ({
-  isError = false,
-  helperText,
-  label,
-  ...props
-}) => {
-  const inputRef = React.useRef<HTMLInputElement>(null)
+import styles from './InputPassword.module.css'
+
+type InputPasswordProps = InputProps
+
+export const InputPassword: React.FC<InputPasswordProps> = ({ value, ...props }) => {
   const [showPassword, setShowPassword] = React.useState(false)
-  const showPasswordToggle = !!props.value
+  const showPasswordToggle = value
 
   return (
-    <>
-      <div
-        aria-hidden='true'
-        aria-disabled={props.disabled}
-        className={`${inputStyles.input_container} ${isError ? inputStyles.input_container : ''}`}
-        onClick={() => inputRef.current?.focus()}
-      >
-        <input
-          ref={inputRef}
-          className={inputStyles.input}
-          {...props}
-          type={showPasswordToggle && showPassword ? 'text' : 'password'}
-        />
-        <label htmlFor={props.id} className={`${inputStyles.input_label}`}>
-          {label}
-        </label>
-        {showPasswordToggle && (
-          <button
-            className={inputPasswordStyles.password_toggle_container}
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            jfijds
-          </button>
-        )}
-      </div>
-      {isError && helperText && <div className={inputStyles.helper_text}>{helperText}</div>}
-    </>
+    <Input
+      mask={/^[a-zA-Z0-9!;,.]+$/g}
+      value={value}
+      {...(showPasswordToggle && {
+        components: {
+          indicator: (
+            <button
+              className={styles.password_toggle_container}
+              onClick={(e) => {
+                e.preventDefault()
+                setShowPassword(!showPassword)
+              }}
+            >
+              <div
+                className={showPassword ? styles.password_hide_icon : styles.password_show_icon}
+              />
+            </button>
+          )
+        }
+      })}
+      {...props}
+    />
   )
 }

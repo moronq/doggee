@@ -7,5 +7,13 @@
   "field.input.passwordAgain.label": "Password again",
   "page.login.createNewAccount": "Create new account",
   "page.registration.fillYourLoginData": "Fill your login data",
-  "page.registration.iAlreadyHaveAnAccount": "I already have an account"
+  "page.registration.iAlreadyHaveAnAccount": "I already have an account",
+  "page.registration.passwordRules.passwordMust": "Password must",
+  "page.registration.passwordRules.containNumbers": "contain <rule>numbers</rule>",
+  "page.registration.passwordRules.containUppercaseLetter": "contain <rule>uppercase</rule> letter",
+  "page.registration.passwordRules.containLowercaseLetter": "contain <rule>lowercase</rule> letter",
+  "page.registration.passwordRules.contain8characters": "contain at leasr <rule>8</rule> characters",
+  "page.registration.passwordRules.passwordMustMatch": "Password must <rule>match</rule>",
+
+  "validation.required": "field required"
 }

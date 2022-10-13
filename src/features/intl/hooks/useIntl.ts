@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { IntlContext } from '@features'
+import { IntlContext } from '../context'
 
 export const useIntl = () => {
   const intl = React.useContext(IntlContext)
@@ -13,10 +13,12 @@ export const useIntl = () => {
     if (!values) return intl.messages[path]
 
     let translate = intl.messages[path]
-    for (const key in values) {
-      translate = translate.replace(`${key}`, String(values[key]))
-    }
+    Object.keys(values).forEach((key) => {
+      translate = translate.replace(`{${key}}`, String(values[key]))
+    })
+
     return translate
   }
+
   return { locale: intl.locale, translateMessage }
 }
