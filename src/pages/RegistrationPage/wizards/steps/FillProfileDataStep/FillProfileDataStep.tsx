@@ -2,21 +2,23 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
-import { Calendar } from '@common/Calendar'
-import { Input, InputPassword } from '@common/fields'
+import { DateInput, Input, InputPassword } from '@common/fields'
 import { IntlText, useIntl } from '@features'
-import { PasswordRules, validateIsEmpty } from '@pages'
+import { validateIsEmpty } from '@pages'
 import { api, useForm, useMutation } from '@utils'
 
-import styles from '../../RegistrationPage.module.css'
+import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
+
+import styles from './FillProfileDataStep.module.css'
 
 interface RegistrationFormValues {
   username: string
   password: string
   passwordAgain: string
+  birthDate: string
 }
 
-interface FillLoginDataStepProps {
+interface FillProfileDataStepProps {
   setStep: () => void
 }
 
@@ -25,7 +27,7 @@ const registrationFormValidateSchema = {
   password: (value: string) => validateIsEmpty(value)
 }
 
-export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep }) => {
+export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setStep }) => {
   const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation<
     Omit<RegistrationFormValues, 'passwordAgain'>,
     ApiResponse<User[]>
@@ -35,7 +37,8 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep })
     initialValues: {
       username: '',
       password: '',
-      passwordAgain: ''
+      passwordAgain: '',
+      birthDate: ''
     },
     validateSchema: registrationFormValidateSchema,
     validateOnChange: false,
@@ -43,7 +46,8 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep })
       console.log('values', values)
       const response = await registrationMutation({
         password: values.password,
-        username: values.username
+        username: values.username,
+        birthDate: values.birthDate
       })
 
       console.log(response)
@@ -51,12 +55,10 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep })
   })
   const { translateMessage } = useIntl()
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <div className={styles.form_container}>
-          <h1 className={styles.form_title}>
-            <IntlText path='page.registration.fillYourLoginData' />
-          </h1>
+    <RegistrationWizardContainer
+      form={{
+        title: <IntlText path='page.registration.fillYourLoginData' />,
+        content: (
           <form className={styles.form_container} onSubmit={handleSubmit}>
             <div className={styles.input_container}>
               <Input
@@ -85,15 +87,13 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep })
               />
             </div>
             <div className={styles.input_container}>
-              <InputPassword
+              <DateInput
                 disabled={registrationLoading}
-                isError={!!errors?.passwordAgain}
-                helperText={errors?.passwordAgain ?? undefined}
-                value={values.passwordAgain}
-                label={translateMessage('field.input.passwordAgain.label')}
+                label='data'
+                value={values.birthDate}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const passwordAgain = e.target.value
-                  setFieldValues('passwordAgain', passwordAgain)
+                  const birthDate = e.target.value
+                  setFieldValues('birthDate', birthDate)
                 }}
               />
             </div>
@@ -101,23 +101,16 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep })
               <IntlText path='button.done' values={{ test: 213124 }} />
             </Button>
           </form>
-        </div>
-        <div className={styles.panel_container}>
-          <div className={styles.panel_header}>doggee</div>
-          <div className={styles.panel_data}>
-            <PasswordRules
-              password={values.password}
-              passwordAgain={values.passwordAgain}
-              hasPasswordErrors={!!errors?.password}
-            />
-          </div>
-          <div className={styles.panel_have_account}>
-            <Link to='/auth'>
-              <IntlText path='page.registration.iAlreadyHaveAnAccount' />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+        )
+      }}
+      panel={{
+        data: <div>dskfj</div>,
+        footer: (
+          <Link to='/auth'>
+            <IntlText path='page.registration.iAlreadyHaveAnAccount' />
+          </Link>
+        )
+      }}
+    />
   )
 }

@@ -1,0 +1,12 @@
+.input_container {
+  margin-bottom: 15px;
+  width: 100%;
+}
+.form_container {
+  grid-area: form;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
