@@ -9,7 +9,7 @@ export interface InputProps
   helperText?: string
   availableChars?: RegExp
   components?: {
-    indicator?: React.ReactNode
+    indicator?: () => React.ReactElement
   }
 }
 
@@ -23,6 +23,8 @@ export const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
+
+  console.log('render')
 
   return (
     <>
@@ -40,7 +42,7 @@ export const Input: React.FC<InputProps> = ({
             onChange={(e) => {
               if (!!onChange && !e.target.value) return onChange(e)
               if (!onChange || (availableChars && !availableChars.test(e.target.value))) return
-              onChange(e)
+              return onChange(e)
             }}
           />
           <label htmlFor={props.id} className={`${styles.input_label}`}>
@@ -48,7 +50,7 @@ export const Input: React.FC<InputProps> = ({
           </label>
         </div>
         {components?.indicator && (
-          <div className={styles.input_indicator}>{components.indicator}</div>
+          <div className={styles.input_indicator}>{components.indicator()}</div>
         )}
       </div>
       {isError && helperText && <div className={styles.helper_text}>{helperText}</div>}

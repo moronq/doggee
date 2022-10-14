@@ -5,3 +5,15 @@
   background-size: 1.19rem 1.19rem;
   background-image: var(--images-calendar);
 }
+
+.date_input_container {
+  width: 100%;
+  position: relative;
+}
+
+.calendar_container {
+  z-index: 99;
+  margin-top: 0.35rem;
+  position: absolute;
+  right: 0;
+}

@@ -11,7 +11,7 @@ interface DateInputProps extends Omit<InputProps, 'value'> {
 }
 
 export const DateInput: React.FC<DateInputProps> = ({ value, disabled, ...props }) => {
-  const showPasswordToggle = !!value
+  const calendarContainerRef = React.useRef(null)
 
   const CalendarIcon = React.useCallback(
     () => (
@@ -23,16 +23,14 @@ export const DateInput: React.FC<DateInputProps> = ({ value, disabled, ...props 
   )
 
   return (
-    <>
+    <div className={styles.date_input_container}>
       <Input
         disabled={disabled}
         availableChars={/^[0-9]+$/g}
         {...props}
-        {...(showPasswordToggle && {
-          components: {
-            indicator: <CalendarIcon />
-          }
-        })}
+        components={{
+          indicator: () => <CalendarIcon />
+        }}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const birthDate = e.target.value
           const day = birthDate.substring(0, 2)
@@ -42,7 +40,9 @@ export const DateInput: React.FC<DateInputProps> = ({ value, disabled, ...props 
           // setFieldValues('birthDate', birthDate)
         }}
       />
-      <Calendar />
-    </>
+      <div ref={calendarContainerRef} className={styles.calendar_container}>
+        <Calendar />
+      </div>
+    </div>
   )
 }
