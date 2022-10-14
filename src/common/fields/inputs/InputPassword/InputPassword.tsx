@@ -13,14 +13,13 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, ...props })
 
   return (
     <Input
-      mask={/^[a-zA-Z0-9!;,.]+$/g}
+      availableChars={/^[a-zA-Z0-9!;,.]+$/g}
       type={showPassword ? 'text' : 'password'}
       value={value}
       {...(showPasswordToggle && {
         components: {
           indicator: (
             <button
-              className={styles.password_toggle_container}
               onClick={(e) => {
                 e.preventDefault()
                 setShowPassword(!showPassword)

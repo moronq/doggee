@@ -7,7 +7,7 @@ export interface InputProps
   label: string
   isError?: boolean
   helperText?: string
-  mask?: RegExp
+  availableChars?: RegExp
   components?: {
     indicator?: React.ReactNode
   }
@@ -17,7 +17,7 @@ export const Input: React.FC<InputProps> = ({
   isError = false,
   helperText,
   label,
-  mask,
+  availableChars,
   onChange,
   components,
   ...props
@@ -39,7 +39,7 @@ export const Input: React.FC<InputProps> = ({
             {...props}
             onChange={(e) => {
               if (!!onChange && !e.target.value) return onChange(e)
-              if (!onChange || (mask && !mask.test(e.target.value))) return
+              if (!onChange || (availableChars && !availableChars.test(e.target.value))) return
               onChange(e)
             }}
           />
@@ -47,7 +47,9 @@ export const Input: React.FC<InputProps> = ({
             {label}
           </label>
         </div>
-        {components?.indicator && <div>{components.indicator}</div>}
+        {components?.indicator && (
+          <div className={styles.input_indicator}>{components.indicator}</div>
+        )}
       </div>
       {isError && helperText && <div className={styles.helper_text}>{helperText}</div>}
     </>

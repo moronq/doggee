@@ -76,3 +76,13 @@
   color: var(--color-text-validation);
   padding-left: 10px;
 }
+
+.input_indicator {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}
