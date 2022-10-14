@@ -13,14 +13,16 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, disabled, .
 
   const EyeIcon = React.useCallback(
     () => (
-      <button
+      <div
+        aria-hidden
+        className={styles.icon_container}
         onClick={(e) => {
           e.preventDefault()
           setShowPassword(!showPassword)
         }}
       >
         <div className={showPassword ? styles.password_hide_icon : styles.password_show_icon} />
-      </button>
+      </div>
     ),
     [showPassword, disabled]
   )
@@ -32,18 +34,7 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, disabled, .
       value={value}
       disabled={disabled}
       components={{
-        indicator: () => (
-          <div
-            aria-hidden
-            className={styles.icon_container}
-            onClick={(e) => {
-              e.preventDefault()
-              setShowPassword(!showPassword)
-            }}
-          >
-            <div className={showPassword ? styles.password_hide_icon : styles.password_show_icon} />
-          </div>
-        )
+        indicator: EyeIcon
       }}
       // {...(showPasswordToggle && {
       //   components: {
