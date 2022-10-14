@@ -24,8 +24,6 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
 
-  console.log('render')
-
   return (
     <>
       <div className={styles.field_container}>

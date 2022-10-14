@@ -5,7 +5,7 @@ import { FillProfileDataStep } from './wizards/steps/FillProfileDataStep/FillPro
 
 export const RegistrationPage: React.FC = () => {
   const [step, setStep] = React.useState<'fillLoginData' | 'fillProfileData' | 'pets' | 'check'>(
-    'fillLoginData'
+    'fillProfileData'
   )
 
   return (
