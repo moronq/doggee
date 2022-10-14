@@ -15,9 +15,9 @@ export const DateInput: React.FC<DateInputProps> = ({ value, disabled, ...props 
 
   const CalendarIcon = React.useCallback(
     () => (
-      <button onClick={(e) => e.preventDefault()}>
+      <div aria-hidden onClick={(e) => e.preventDefault()}>
         <div className={styles.calendar_icon} />
-      </button>
+      </div>
     ),
     [disabled]
   )

@@ -31,11 +31,25 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, disabled, .
       type={showPassword ? 'text' : 'password'}
       value={value}
       disabled={disabled}
-      {...(showPasswordToggle && {
-        components: {
-          indicator: EyeIcon
-        }
-      })}
+      components={{
+        indicator: () => (
+          <div
+            aria-hidden
+            className={styles.icon_container}
+            onClick={(e) => {
+              e.preventDefault()
+              setShowPassword(!showPassword)
+            }}
+          >
+            <div className={showPassword ? styles.password_hide_icon : styles.password_show_icon} />
+          </div>
+        )
+      }}
+      // {...(showPasswordToggle && {
+      //   components: {
+      //     indicator: EyeIcon
+      //   }
+      // })}
       {...props}
     />
   )
