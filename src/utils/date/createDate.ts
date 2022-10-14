@@ -16,7 +16,7 @@ export const createDate = (params?: CreateDateParams) => {
   const year = d.getFullYear() // 2022
   const yearShort = d.toLocaleString(locale, { year: '2-digit' }) // 22
   const month = d.toLocaleString(locale, { month: 'long' }) // October
-  const monthShort = d.toLocaleString(locale, { month: 'long' }) // Oct
+  const monthShort = d.toLocaleString(locale, { month: 'short' }) // Oct
   const monthNumber = d.getMonth() + 1 // 10
   const monthIndex = d.getMonth() // 9
   const timestamp = d.getTime() // 1665697321423

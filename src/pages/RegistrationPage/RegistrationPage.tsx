@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
+import { Calendar } from '@common/Calendar'
 import { Input, InputPassword } from '@common/fields'
 import { IntlText, useIntl } from '@features'
 import { PasswordRules, validateIsEmpty } from '@pages'
@@ -52,6 +53,7 @@ export const RegistrationPage: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.container}>
         <div className={styles.form_container}>
+          <Calendar />
           <h1 className={styles.form_title}>
             <IntlText path='page.registration.fillYourLoginData' />
           </h1>
