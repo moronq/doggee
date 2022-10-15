@@ -21,8 +21,22 @@ export const Calendar = () => {
   const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(selectedDate.monthIndex)
   const [selectedYear, setSelectedYear] = React.useState(selectedDate.year)
 
+  const decadeStarts = Math.floor(selectedYear / 10) * 10
+  const decadeEnds = decadeStarts + 9
+
   const monthesNames = React.useMemo(() => getMonthesNames(locale, selectedYear), [selectedYear])
   const weekDaysNames = React.useMemo(() => getWeekDaysNames(2, locale), [])
+  const decade = React.useMemo(() => {
+    const decadesYears = new Array(10).fill(0).map((_, index) => ({
+      year: decadeStarts + index,
+      ghost: false
+    }))
+    return [
+      { year: decadesYears[0].year - 1, ghost: true },
+      ...decadesYears,
+      { year: decadesYears[decadesYears.length - 1].year + 1, ghost: true }
+    ]
+  }, [decadeStarts])
 
   const month = React.useMemo(
     () => createMonth({ date: new Date(selectedYear, selectedMonthIndex), locale }),
@@ -40,6 +54,9 @@ export const Calendar = () => {
     if (mode === 'monthes') {
       setSelectedYear(selectedYear - 1)
     }
+    if (mode === 'years') {
+      setSelectedYear(selectedYear - 10)
+    }
   }
   const moveRight = () => {
     if (mode === 'days') {
@@ -49,6 +66,9 @@ export const Calendar = () => {
     }
     if (mode === 'monthes') {
       setSelectedYear(selectedYear + 1)
+    }
+    if (mode === 'years') {
+      setSelectedYear(selectedYear + 10)
     }
   }
 
@@ -75,21 +95,27 @@ export const Calendar = () => {
     return [...prevMonthSlice, ...days, ...nextMonthSlice]
   }, [selectedMonthIndex, selectedYear])
 
+  const switchStep = () => {
+    if (mode === 'days') {
+      setMode('monthes')
+    }
+    if (mode === 'monthes') {
+      setMode('years')
+    }
+    if (mode === 'years') {
+      setMode('days')
+    }
+  }
+
   return (
     <div className={styles.calendar_container}>
       <div className={styles.calendar_header_container}>
         <div aria-hidden className={styles.calendar_header_arrow_left} onClick={moveLeft} />
-        {mode === 'days' && (
-          <div aria-hidden onClick={() => setMode('monthes')}>
-            {month.monthName}
-          </div>
-        )}
-        {mode === 'monthes' && (
-          <div aria-hidden onClick={() => setMode('years')}>
-            {selectedYear}
-          </div>
-        )}
-
+        <div aria-hidden onClick={switchStep}>
+          {mode === 'days' && month.monthName}
+          {mode === 'monthes' && selectedYear}
+          {mode === 'years' && `${decadeStarts} - ${decadeEnds}`}
+        </div>
         <div aria-hidden className={styles.calendar_header_arrow_right} onClick={moveRight} />
       </div>
       <div className={styles.calendar_picker_container}>
@@ -106,7 +132,7 @@ export const Calendar = () => {
                   aria-hidden
                   onClick={() => setSelectedDate(el)}
                   className={`${styles.calendar_day_container} ${
-                    el.monthNumber !== selectedMonthIndex + 1 ? styles.calendar_ghost_day : ''
+                    el.monthNumber !== selectedMonthIndex + 1 ? styles.calendar_ghost_item : ''
                   } ${
                     checkDateIsEqual(el.date, selectedDate.date) &&
                     styles.calendar_selected_day_container
@@ -133,6 +159,25 @@ export const Calendar = () => {
                 key={month.monthIndex}
               >
                 {month.monthShort}
+              </div>
+            ))}
+          </div>
+        )}
+        {mode === 'years' && (
+          <div className={styles.calendar_years_container}>
+            {decade.map((year) => (
+              <div
+                aria-hidden
+                onClick={() => {
+                  setSelectedYear(year.year)
+                  setMode('monthes')
+                }}
+                key={year.year}
+                className={`${styles.calendar_year_container} ${
+                  year.ghost && styles.calendar_ghost_item
+                }`}
+              >
+                {year.year}
               </div>
             ))}
           </div>
