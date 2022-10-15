@@ -2,6 +2,8 @@ import React from 'react'
 
 import {
   checkDateIsEqual,
+  checkIsCurrentMonth,
+  checkIsCurrentYear,
   checkIsToday,
   createDate,
   createMonth,
@@ -13,9 +15,12 @@ import {
 
 import styles from './Calendar.module.css'
 
-const locale = 'en-US'
+interface CalendarProps {
+  locale: string
+  selectDate: (date: Date) => void
+}
 
-export const Calendar = () => {
+export const Calendar: React.FC<CalendarProps> = ({ locale, selectDate }) => {
   const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
   const [selectedDate, setSelectedDate] = React.useState(createDate())
   const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(selectedDate.monthIndex)
@@ -130,14 +135,17 @@ export const Calendar = () => {
               {calendarDays.map((el) => (
                 <div
                   aria-hidden
-                  onClick={() => setSelectedDate(el)}
+                  onClick={() => {
+                    setSelectedDate(el)
+                    selectDate(el.date)
+                  }}
                   className={`${styles.calendar_day_container} ${
                     el.monthNumber !== selectedMonthIndex + 1 ? styles.calendar_ghost_item : ''
                   } ${
                     checkDateIsEqual(el.date, selectedDate.date) &&
                     styles.calendar_selected_day_container
                   }
-              ${checkIsToday(el.date) && styles.calendar_today_container}`}
+                  ${checkIsToday(el.date) && styles.calendar_today_container}`}
                   key={el.timestamp}
                 >
                   {el.dayNumber}
@@ -155,7 +163,10 @@ export const Calendar = () => {
                   setSelectedMonthIndex(month.monthIndex)
                   setMode('days')
                 }}
-                className={styles.calendar_month_container}
+                className={`${styles.calendar_month_container} ${
+                  checkIsCurrentMonth(month.monthIndex, selectedYear) &&
+                  styles.calendar_today_container
+                }`}
                 key={month.monthIndex}
               >
                 {month.monthShort}
@@ -175,7 +186,7 @@ export const Calendar = () => {
                 key={year.year}
                 className={`${styles.calendar_year_container} ${
                   year.ghost && styles.calendar_ghost_item
-                }`}
+                } ${checkIsCurrentYear(year.year) && styles.calendar_today_container}`}
               >
                 {year.year}
               </div>

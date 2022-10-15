@@ -15,7 +15,7 @@ interface RegistrationFormValues {
   username: string
   password: string
   passwordAgain: string
-  birthDate: string
+  birthDate: Date
 }
 
 interface FillProfileDataStepProps {
@@ -38,7 +38,7 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
       username: '',
       password: '',
       passwordAgain: '',
-      birthDate: ''
+      birthDate: new Date(new Date().getTime())
     },
     validateSchema: registrationFormValidateSchema,
     validateOnChange: false,
@@ -54,6 +54,9 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
     }
   })
   const { translateMessage } = useIntl()
+
+  console.log(values.birthDate)
+
   return (
     <RegistrationWizardContainer
       form={{
@@ -91,9 +94,8 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
                 disabled={registrationLoading}
                 label='data'
                 value={values.birthDate}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const birthDate = e.target.value
-                  setFieldValues('birthDate', birthDate)
+                onChange={(date) => {
+                  setFieldValues('birthDate', date)
                 }}
               />
             </div>

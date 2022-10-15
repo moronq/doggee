@@ -82,8 +82,7 @@
   background-color: var(--color-additional);
 }
 
-.calendar_today_container,
-.calendar_current_month_container {
+.calendar_today_container {
   background-color: var(--background-color);
 }
 
