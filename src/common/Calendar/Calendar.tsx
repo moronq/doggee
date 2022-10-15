@@ -21,14 +21,36 @@ export const Calendar = () => {
   const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(selectedDate.monthIndex)
   const [selectedYear, setSelectedYear] = React.useState(selectedDate.year)
 
-  const monthesNames = React.useMemo(() => getMonthesNames(locale), [])
+  const monthesNames = React.useMemo(() => getMonthesNames(locale, selectedYear), [selectedYear])
   const weekDaysNames = React.useMemo(() => getWeekDaysNames(2, locale), [])
 
   const month = React.useMemo(
-    () => createMonth({ date: new Date(selectedDate.year, selectedMonthIndex), locale }),
-    [selectedMonthIndex]
+    () => createMonth({ date: new Date(selectedYear, selectedMonthIndex), locale }),
+    [selectedMonthIndex, selectedYear]
   )
-  const days = React.useMemo(() => month.createMonthDays(), [selectedMonthIndex])
+
+  const days = React.useMemo(() => month.createMonthDays(), [selectedMonthIndex, selectedYear])
+
+  const moveLeft = () => {
+    if (mode === 'days') {
+      setSelectedMonthIndex(
+        selectedMonthIndex - 1 < 0 ? selectedMonthIndex + 11 : selectedMonthIndex - 1
+      )
+    }
+    if (mode === 'monthes') {
+      setSelectedYear(selectedYear - 1)
+    }
+  }
+  const moveRight = () => {
+    if (mode === 'days') {
+      setSelectedMonthIndex(
+        selectedMonthIndex + 1 > 11 ? 11 - selectedMonthIndex : selectedMonthIndex + 1
+      )
+    }
+    if (mode === 'monthes') {
+      setSelectedYear(selectedYear + 1)
+    }
+  }
 
   const calendarDays = React.useMemo(() => {
     const monthStartInDay = days[0].dayNumberInWeek - 1 > 0 ? days[0].dayNumberInWeek - 1 : 7
@@ -51,20 +73,12 @@ export const Calendar = () => {
       .splice(0, 7 - monthEndsInDay)
 
     return [...prevMonthSlice, ...days, ...nextMonthSlice]
-  }, [selectedMonthIndex])
+  }, [selectedMonthIndex, selectedYear])
 
   return (
     <div className={styles.calendar_container}>
       <div className={styles.calendar_header_container}>
-        <div
-          aria-hidden
-          className={styles.calendar_header_arrow_left}
-          onClick={() =>
-            setSelectedMonthIndex(
-              selectedMonthIndex - 1 < 0 ? selectedMonthIndex + 11 : selectedMonthIndex - 1
-            )
-          }
-        />
+        <div aria-hidden className={styles.calendar_header_arrow_left} onClick={moveLeft} />
         {mode === 'days' && (
           <div aria-hidden onClick={() => setMode('monthes')}>
             {month.monthName}
@@ -76,15 +90,7 @@ export const Calendar = () => {
           </div>
         )}
 
-        <div
-          aria-hidden
-          className={styles.calendar_header_arrow_right}
-          onClick={() =>
-            setSelectedMonthIndex(
-              selectedMonthIndex + 1 > 11 ? 11 - selectedMonthIndex : selectedMonthIndex + 1
-            )
-          }
-        />
+        <div aria-hidden className={styles.calendar_header_arrow_right} onClick={moveRight} />
       </div>
       <div className={styles.calendar_picker_container}>
         {mode === 'days' && (

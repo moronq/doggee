@@ -13,13 +13,21 @@ interface DateInputProps extends Omit<InputProps, 'value'> {
 export const DateInput: React.FC<DateInputProps> = ({ value, disabled, ...props }) => {
   const calendarContainerRef = React.useRef(null)
 
+  const [calendarActive, setCalendarActive] = React.useState(false)
+
   const CalendarIcon = React.useCallback(
     () => (
-      <div aria-hidden onClick={(e) => e.preventDefault()}>
+      <div
+        aria-hidden
+        onClick={(e) => {
+          e.preventDefault()
+          setCalendarActive(!calendarActive)
+        }}
+      >
         <div className={styles.calendar_icon} />
       </div>
     ),
-    [disabled]
+    [disabled, calendarActive]
   )
 
   return (
@@ -40,9 +48,11 @@ export const DateInput: React.FC<DateInputProps> = ({ value, disabled, ...props 
           // setFieldValues('birthDate', birthDate)
         }}
       />
-      <div ref={calendarContainerRef} className={styles.calendar_container}>
-        <Calendar />
-      </div>
+      {calendarActive && (
+        <div ref={calendarContainerRef} className={styles.calendar_container}>
+          <Calendar />
+        </div>
+      )}
     </div>
   )
 }

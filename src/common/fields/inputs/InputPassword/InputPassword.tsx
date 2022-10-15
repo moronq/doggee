@@ -33,14 +33,11 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, disabled, .
       type={showPassword ? 'text' : 'password'}
       value={value}
       disabled={disabled}
-      components={{
-        indicator: EyeIcon
-      }}
-      // {...(showPasswordToggle && {
-      //   components: {
-      //     indicator: EyeIcon
-      //   }
-      // })}
+      {...(showPasswordToggle && {
+        components: {
+          indicator: EyeIcon
+        }
+      })}
       {...props}
     />
   )
