@@ -1,0 +1,127 @@
+.select_icon {
+  cursor: pointer;
+  width: 19px;
+  height: 19px;
+  background-image: var(--images-arrow);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.date_input_container {
+  position: relative;
+}
+
+.options_container {
+  margin-top: 5px;
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  border-radius: 5px;
+  background-color: var(--color-field-focused);
+}
+
+.option_container {
+  padding: 6.5px 20px;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-placeholder);
+}
+.option_container:first-child:hover {
+  border-radius: 5px 5px 0 0;
+}
+.option_container:last-child:hover {
+  border-radius: 0 0 5px 5px;
+}
+
+.option_container:hover {
+  background-color: var(--color-additional7);
+}
+
+.field_container {
+  position: relative;
+}
+
+.input_container {
+  background-color: var(--background-color-field);
+  border-radius: 5px;
+  padding: 20px 15px 9px;
+  width: 100%;
+  height: 48px;
+  cursor: text;
+  transition: var(--transition);
+  display: flex;
+}
+
+.input_container[aria-disabled='true'] {
+  cursor: default;
+  background-color: var(--color-field-focused);
+}
+
+.input_container:hover {
+  background-color: var(--color-field-focused);
+}
+
+.input_label {
+  cursor: text;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  z-index: 1;
+  color: var(--color-placeholder);
+  font-size: 14px;
+  transition: transform 150ms ease-out, font-size 150ms ease-out;
+}
+
+.input_error {
+  background: var(--background-color-field-validation);
+}
+
+.input_label::first-letter {
+  text-transform: uppercase;
+}
+
+.input_container[aria-disabled='true'] .input_label {
+  cursor: default;
+}
+
+.input_container:focus-within .input_label,
+.input:not([value='']):not(:focus) ~ .input_label {
+  transform: translate(-10%, -80%);
+  font-size: 10px;
+}
+
+.input {
+  background: transparent;
+  width: 100%;
+  color: var(--color-text);
+  font-size: 12px;
+}
+
+.input:focus,
+.input:active {
+  outline: none;
+  caret-color: var(--color-text);
+}
+
+.error,
+.error:hover {
+  background: rgba(257, 57, 57, 0.3);
+}
+
+.helper_text {
+  font-weight: 300;
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--color-text-validation);
+  padding-left: 10px;
+}
+
+.input_indicator {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+}

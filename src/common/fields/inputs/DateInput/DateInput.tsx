@@ -1,11 +1,11 @@
 import React from 'react'
 
 import { Calendar } from '@common/Calendar'
+import { formatDate, MAX_LENGTH, useOnClickOutside } from '@utils'
 
 import { Input, InputProps } from '../Input/Input'
 
 import styles from './DateInput.module.css'
-import { formatDate, useOnClickOutside } from '@utils'
 
 interface DateInputProps extends Omit<InputProps, 'value' | 'onChange'> {
   value: Date
@@ -53,8 +53,9 @@ export const DateInput: React.FC<DateInputProps> = ({
       <Input
         value={inputValue}
         disabled={disabled}
-        availableChars={/^[0-9]+$/g}
+        availableChars={/^[0-9.]+$/g}
         {...props}
+        maxLength={MAX_LENGTH.DATE}
         components={{
           indicator: () => <CalendarIcon />
         }}
@@ -97,7 +98,7 @@ export const DateInput: React.FC<DateInputProps> = ({
       />
       {calendarActive && (
         <div ref={calendarContainerRef} className={styles.calendar_container}>
-          <Calendar locale={locale} selectDate={props.onChange} />
+          <Calendar locale={locale} selectDate={props.onChange} selectedDate={value} />
         </div>
       )}
     </div>

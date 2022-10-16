@@ -9,10 +9,11 @@ import styles from './Calendar.module.css'
 interface CalendarProps {
   locale: string
   selectDate: (date: Date) => void
+  selectedDate: Date
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ locale, selectDate }) => {
-  const { state, functions } = useCalendar({ locale })
+export const Calendar: React.FC<CalendarProps> = ({ locale, selectDate, selectedDate }) => {
+  const { state, functions } = useCalendar({ locale, selectedDate })
 
   return (
     <div className={styles.calendar_container}>

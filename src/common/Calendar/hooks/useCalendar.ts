@@ -4,11 +4,12 @@ import { createDate, createMonth, getMonthesNames, getWeekDaysNames } from '@uti
 
 interface UseCalendarProps {
   locale?: string
+  selectedDate: Date
 }
 
-export const useCalendar = ({ locale = 'default' }: UseCalendarProps) => {
+export const useCalendar = ({ locale = 'default', selectedDate: date }: UseCalendarProps) => {
   const [mode, setMode] = React.useState<'days' | 'monthes' | 'years'>('days')
-  const [selectedDate, setSelectedDate] = React.useState(createDate())
+  const [selectedDate, setSelectedDate] = React.useState(createDate({ date }))
   const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(selectedDate.monthIndex)
   const [selectedYear, setSelectedYear] = React.useState(selectedDate.year)
 

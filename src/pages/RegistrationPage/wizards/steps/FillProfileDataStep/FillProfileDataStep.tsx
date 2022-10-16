@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
-import { DateInput, Input, InputPassword } from '@common/fields'
+import { DateInput, Input, InputPassword, Select } from '@common/fields'
 import { IntlText, useIntl } from '@features'
 import { validateIsEmpty } from '@pages'
 import { api, useForm, useMutation } from '@utils'
@@ -55,8 +55,6 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
   })
   const { translateMessage } = useIntl()
 
-  console.log(values.birthDate)
-
   return (
     <RegistrationWizardContainer
       form={{
@@ -97,6 +95,26 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
                 onChange={(date) => {
                   setFieldValues('birthDate', date)
                 }}
+                {...(!!errors &&
+                  !!errors.birthDate && {
+                    isError: !!errors.birthDate,
+                    helperText: errors.birthDate
+                  })}
+              />
+            </div>
+            <div className={styles.input_container}>
+              <Select
+                disabled={registrationLoading}
+                label='data'
+                option={{ label: '1', option: '1', value: '1' }}
+                onChange={(date) => {
+                  setFieldValues('birthDate', date)
+                }}
+                {...(!!errors &&
+                  !!errors.birthDate && {
+                    isError: !!errors.birthDate,
+                    helperText: errors.birthDate
+                  })}
               />
             </div>
             <Button type='submit' isLoading={registrationLoading}>

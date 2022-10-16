@@ -39,8 +39,10 @@ export const Input: React.FC<InputProps> = ({
             {...props}
             onChange={(e) => {
               if (!!onChange && !e.target.value) return onChange(e)
-              if (!onChange || (availableChars && !availableChars.test(e.target.value))) return
-              return onChange(e)
+              if (!onChange || (availableChars && !availableChars.test(e.target.value)))
+                // @ts-ignore
+                return onChange({ ...e, target: { ...e.target, value: props.value } })
+              onChange(e)
             }}
           />
           <label htmlFor={props.id} className={`${styles.input_label}`}>

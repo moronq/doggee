@@ -33,7 +33,7 @@
 
 .calendar_picker_container {
   padding: 10px;
-  background-color: var(--background-color-field);
+  background-color: var(--color-field-focused);
   border-radius: 0 0 4px 4px;
 }
 
