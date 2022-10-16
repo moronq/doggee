@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { IntlProvider, Theme, ThemeProvider } from '@features'
 import { LoginPage, NotFoundPage, RegistrationPage } from '@pages'
+import { StoreProvider } from '@utils/contextes'
 import { deleteCookie, getCookie, getLocale, getMessages } from '@utils/helpers'
 
 import './App.css'
@@ -58,7 +59,9 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <IntlProvider locale={locale} messages={messages}>
-        <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
+        <StoreProvider>
+          <BrowserRouter>{isAuth ? <MainRoutes /> : <AuthRoutes />}</BrowserRouter>
+        </StoreProvider>
       </IntlProvider>
     </ThemeProvider>
   )

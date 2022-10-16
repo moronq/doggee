@@ -5,7 +5,7 @@ import { Button } from '@common/buttons'
 import { DateInput, Input, InputPassword, Select } from '@common/fields'
 import { IntlText, useIntl } from '@features'
 import { validateIsEmpty } from '@pages'
-import { api, useForm, useMutation } from '@utils'
+import { api, useForm, useMutation, useStore } from '@utils'
 
 import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
 
@@ -15,46 +15,66 @@ interface ProfileFormValues {
   name: string
   registrationAddress: string
   birthDate: Date
-  test: any
 }
 
 interface FillProfileDataStepProps {
-  setStep: () => void
+  nextStep: () => void
 }
 
-const registrationFormValidateSchema = {
-  username: (value: string) => validateIsEmpty(value),
-  password: (value: string) => validateIsEmpty(value)
+const profileFormValidateSchema = {
+  name: (value: string) => validateIsEmpty(value),
+  registrationAddress: (value: string) => validateIsEmpty(value),
+  birthDate: (value: string) => validateIsEmpty(value)
 }
 
-export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setStep }) => {
-  const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation<
-    Omit<ProfileFormValues, 'passwordAgain'>,
-    ApiResponse<User[]>
-  >((values) => api.post('registration', values))
+type Steps = 'name' | 'registrationAddress' | 'birthDate' | 'test' | null
+
+interface FillProfilePanelDataProps {
+  focusedField: Steps
+}
+
+const FillProfilePanelData: React.FC<FillProfilePanelDataProps> = ({ focusedField }) => {
+  if (!focusedField) return null
+  return (
+    <div>
+      {focusedField === 'registrationAddress' && (
+        <div>
+          We want to know your address so that we can suggest good places for walks with your pet,
+          the nearest veterinary clinics, etc.
+        </div>
+      )}
+      {focusedField === 'birthDate' && <div>birthDate</div>}
+      {focusedField === 'name' && <div>name</div>}
+      {focusedField === 'test' && <div>test</div>}
+    </div>
+  )
+}
+
+export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ nextStep }) => {
+  const { setStore, user } = useStore()
+  const [currentField, setCurrentField] = React.useState<Steps>(null)
+
+  const { mutationAsync: profileMutation, isLoading: profileLoading } = useMutation<
+    ProfileFormValues,
+    ApiResponse<User>
+  >((values) => api.put(`users/${user?.id}`, values))
 
   const { values, errors, setFieldValues, handleSubmit } = useForm<ProfileFormValues>({
     initialValues: {
       name: '',
       registrationAddress: '',
-      test: null,
       birthDate: new Date(new Date().getTime())
     },
-    // validateSchema: registrationFormValidateSchema,
+    // validateSchema: profileFormValidateSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
-      // console.log('values', values)
-      // const response = await registrationMutation({
-      //   password: values.password,
-      //   username: values.username,
-      //   birthDate: values.birthDate
-      // })
-      // console.log(response)
+      const response = await profileMutation(values)
+      if (!response?.success) return
+      setStore({ user: response.data })
+      nextStep()
     }
   })
   const { translateMessage } = useIntl()
-
-  console.log('values', values.test)
 
   return (
     <RegistrationWizardContainer
@@ -65,11 +85,10 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
           <form className={styles.form_container} onSubmit={handleSubmit}>
             <div className={styles.input_container}>
               <Input
-                disabled={registrationLoading}
-                // isError={!!errors?.username}
-                // helperText={errors?.username ?? undefined}
-                // value={values.username}
-                label={translateMessage('field.input.username.label')}
+                disabled={profileLoading}
+                value={values.name}
+                label={translateMessage('field.input.name.label')}
+                onFocus={() => setCurrentField('name')}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const username = e.target.value
                   // setFieldValues('username', username)
@@ -77,22 +96,21 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
               />
             </div>
             <div className={styles.input_container}>
-              <InputPassword
-                disabled={registrationLoading}
-                // isError={!!errors?.password}
-                // helperText={errors?.password ?? undefined}
-                // value={values.password}
-                label={translateMessage('field.input.password.label')}
+              <Input
+                disabled={profileLoading}
+                value={values.name}
+                label={translateMessage('field.input.registrationAddress.label')}
+                onFocus={() => setCurrentField('registrationAddress')}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const password = e.target.value
-                  // setFieldValues('password', password)
+                  const username = e.target.value
+                  // setFieldValues('username', username)
                 }}
               />
             </div>
             <div className={styles.input_container}>
               <DateInput
-                disabled={registrationLoading}
-                label='data'
+                disabled={profileLoading}
+                label={translateMessage('field.input.birthDay.label')}
                 value={values.birthDate}
                 onChange={(date) => {
                   setFieldValues('birthDate', date)
@@ -105,8 +123,8 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
               />
             </div>
             <div className={styles.input_container}>
-              <Select
-                disabled={registrationLoading}
+              {/* <Select
+                disabled={profileLoading}
                 label='data'
                 option={{ label: values.test, option: values.test, value: values.test }}
                 onChange={(option) => {
@@ -117,16 +135,16 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
                     isError: !!errors.birthDate,
                     helperText: errors.birthDate
                   })}
-              />
+              /> */}
             </div>
-            <Button type='submit' isLoading={registrationLoading}>
+            <Button type='submit' isLoading={profileLoading}>
               <IntlText path='button.done' values={{ test: 213124 }} />
             </Button>
           </form>
         )
       }}
       panel={{
-        data: <div>dskfj</div>,
+        data: <FillProfilePanelData focusedField={currentField} />,
         footer: (
           <Link to='/auth'>
             <IntlText path='page.registration.iAlreadyHaveAnAccount' />

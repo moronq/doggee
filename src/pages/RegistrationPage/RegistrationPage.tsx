@@ -4,14 +4,19 @@ import { FillLoginDataStep } from './wizards/steps/FillLoginDataStep/FillLoginDa
 import { FillProfileDataStep } from './wizards/steps/FillProfileDataStep/FillProfileDataStep'
 
 export const RegistrationPage: React.FC = () => {
-  const [step, setStep] = React.useState<'fillLoginData' | 'fillProfileData' | 'pets' | 'check'>(
-    'fillProfileData'
-  )
+  const [step, setStep] = React.useState<
+    'fillLoginData' | 'fillProfileData' | 'addPetsData' | 'check'
+  >('fillLoginData')
 
   return (
     <>
-      {step === 'fillLoginData' && <FillLoginDataStep setStep={() => setStep('fillProfileData')} />}
-      {step === 'fillProfileData' && <FillProfileDataStep setStep={() => setStep('pets')} />}
+      {step === 'fillLoginData' && (
+        <FillLoginDataStep nextStep={() => setStep('fillProfileData')} />
+      )}
+      {step === 'fillProfileData' && (
+        <FillProfileDataStep nextStep={() => setStep('addPetsData')} />
+      )}
+      {step === 'addPetsData' && <FillProfileDataStep nextStep={() => setStep('check')} />}
     </>
   )
 }

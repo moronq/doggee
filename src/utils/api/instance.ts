@@ -39,6 +39,22 @@ export class API {
       ...(!!body && { body: JSON.stringify(body) })
     })
   }
+
+  put<T>(endpoint: string, body: Record<string, any>, options: RequestInit = {}) {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      ...(!!body && { body: JSON.stringify(body) })
+    })
+  }
+
+  patch<T>(endpoint: string, body: Record<string, any>, options: RequestInit = {}) {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      ...(!!body && { body: JSON.stringify(body) })
+    })
+  }
 }
 
 export const api = new API(baseUrl)

@@ -5,7 +5,7 @@ import { Button } from '@common/buttons'
 import { Input, InputPassword } from '@common/fields'
 import { IntlText, useIntl } from '@features'
 import { PasswordRules, validateIsEmpty } from '@pages'
-import { api, useForm, useMutation } from '@utils'
+import { api, useForm, useMutation, useStore } from '@utils'
 
 import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
 
@@ -18,7 +18,7 @@ interface RegistrationFormValues {
 }
 
 interface FillLoginDataStepProps {
-  setStep: () => void
+  nextStep: () => void
 }
 
 const registrationFormValidateSchema = {
@@ -26,11 +26,14 @@ const registrationFormValidateSchema = {
   password: (value: string) => validateIsEmpty(value)
 }
 
-export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep }) => {
+export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ nextStep }) => {
   const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation<
     Omit<RegistrationFormValues, 'passwordAgain'>,
-    ApiResponse<User[]>
+    ApiResponse<User>
   >((values) => api.post('registration', values))
+
+  const { translateMessage } = useIntl()
+  const { setStore } = useStore()
 
   const { values, errors, setFieldValues, handleSubmit } = useForm<RegistrationFormValues>({
     initialValues: {
@@ -41,16 +44,17 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ setStep })
     validateSchema: registrationFormValidateSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log('values', values)
       const response = await registrationMutation({
         password: values.password,
         username: values.username
       })
-
       console.log(response)
+      if (!response?.success) return
+      setStore({ user: response.data })
+      nextStep()
     }
   })
-  const { translateMessage } = useIntl()
+
   return (
     <RegistrationWizardContainer
       form={{

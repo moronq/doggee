@@ -31,6 +31,7 @@ export const InputPassword: React.FC<InputPasswordProps> = ({ value, disabled, .
     <Input
       availableChars={/^[a-zA-Z0-9!;,.]+$/g}
       type={showPassword ? 'text' : 'password'}
+      autoComplete='off'
       value={value}
       disabled={disabled}
       {...(showPasswordToggle && {

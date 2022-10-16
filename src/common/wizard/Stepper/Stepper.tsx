@@ -14,7 +14,7 @@ export const Stepper: React.FC<StepperProps> = ({ activeStep, stepLables }) => {
       {stepLables.map((label, index) => {
         const stepNumber = index + 1
         return (
-          <div className={styles.step_container}>
+          <div key={index} className={styles.step_container}>
             <div
               className={`${styles.step_index_container} ${
                 stepNumber === activeStep ? styles.active_step_index_container : ''
