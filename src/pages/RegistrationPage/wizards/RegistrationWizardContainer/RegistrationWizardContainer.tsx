@@ -1,8 +1,11 @@
 import React from 'react'
 
+import { Stepper } from '@common/wizard'
+
 import styles from './RegistrationWizardContainer.module.css'
 
 interface RegistrationWizardContainerProps {
+  activeStep?: number
   form: {
     title: React.ReactNode | string
     content: React.ReactNode
@@ -15,12 +18,18 @@ interface RegistrationWizardContainerProps {
 
 export const RegistrationWizardContainer: React.FC<RegistrationWizardContainerProps> = ({
   form,
-  panel
+  panel,
+  activeStep
 }) => (
   <div className={styles.page}>
     <div className={styles.container}>
       <div className={styles.header_container}>
         <h1 className={styles.form_title}>{form.title}</h1>
+        {activeStep && (
+          <div className={styles.stepper_container}>
+            <Stepper activeStep={activeStep} stepLables={['Your profile', 'Your pets', 'Woof!']} />
+          </div>
+        )}
         {form.content}
       </div>
       <div className={styles.panel_container}>

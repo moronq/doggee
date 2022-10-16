@@ -58,6 +58,7 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
 
   return (
     <RegistrationWizardContainer
+      activeStep={1}
       form={{
         title: <IntlText path='page.registration.fillYourLoginData' />,
         content: (
