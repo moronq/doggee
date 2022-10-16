@@ -37,6 +37,28 @@
   background-color: var(--color-additional7);
 }
 
+.selected_option_container {
+  padding: 6.5px 20px;
+  font-weight: 400;
+  font-size: 14px;
+  background-color: var(--color-additional);
+  color: var(--color-text);
+}
+
+.selected_option_container:first-child,
+.focused_option_container:first-child {
+  border-radius: 5px 5px 0 0;
+}
+
+.selected_option_container:last-child,
+.focused_option_container:last-child {
+  border-radius: 0 0 5px 5px;
+}
+
+.focused_option_container {
+  background-color: var(--color-additional7);
+}
+
 .field_container {
   position: relative;
 }

@@ -11,11 +11,11 @@ import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/R
 
 import styles from './FillProfileDataStep.module.css'
 
-interface RegistrationFormValues {
-  username: string
-  password: string
-  passwordAgain: string
+interface ProfileFormValues {
+  name: string
+  registrationAddress: string
   birthDate: Date
+  test: any
 }
 
 interface FillProfileDataStepProps {
@@ -29,31 +29,32 @@ const registrationFormValidateSchema = {
 
 export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setStep }) => {
   const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation<
-    Omit<RegistrationFormValues, 'passwordAgain'>,
+    Omit<ProfileFormValues, 'passwordAgain'>,
     ApiResponse<User[]>
   >((values) => api.post('registration', values))
 
-  const { values, errors, setFieldValues, handleSubmit } = useForm<RegistrationFormValues>({
+  const { values, errors, setFieldValues, handleSubmit } = useForm<ProfileFormValues>({
     initialValues: {
-      username: '',
-      password: '',
-      passwordAgain: '',
+      name: '',
+      registrationAddress: '',
+      test: null,
       birthDate: new Date(new Date().getTime())
     },
-    validateSchema: registrationFormValidateSchema,
+    // validateSchema: registrationFormValidateSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log('values', values)
-      const response = await registrationMutation({
-        password: values.password,
-        username: values.username,
-        birthDate: values.birthDate
-      })
-
-      console.log(response)
+      // console.log('values', values)
+      // const response = await registrationMutation({
+      //   password: values.password,
+      //   username: values.username,
+      //   birthDate: values.birthDate
+      // })
+      // console.log(response)
     }
   })
   const { translateMessage } = useIntl()
+
+  console.log('values', values.test)
 
   return (
     <RegistrationWizardContainer
@@ -64,26 +65,26 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
             <div className={styles.input_container}>
               <Input
                 disabled={registrationLoading}
-                isError={!!errors?.username}
-                helperText={errors?.username ?? undefined}
-                value={values.username}
+                // isError={!!errors?.username}
+                // helperText={errors?.username ?? undefined}
+                // value={values.username}
                 label={translateMessage('field.input.username.label')}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const username = e.target.value
-                  setFieldValues('username', username)
+                  // setFieldValues('username', username)
                 }}
               />
             </div>
             <div className={styles.input_container}>
               <InputPassword
                 disabled={registrationLoading}
-                isError={!!errors?.password}
-                helperText={errors?.password ?? undefined}
-                value={values.password}
+                // isError={!!errors?.password}
+                // helperText={errors?.password ?? undefined}
+                // value={values.password}
                 label={translateMessage('field.input.password.label')}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const password = e.target.value
-                  setFieldValues('password', password)
+                  // setFieldValues('password', password)
                 }}
               />
             </div>
@@ -106,9 +107,9 @@ export const FillProfileDataStep: React.FC<FillProfileDataStepProps> = ({ setSte
               <Select
                 disabled={registrationLoading}
                 label='data'
-                option={{ label: '1', option: '1', value: '1' }}
-                onChange={(date) => {
-                  setFieldValues('birthDate', date)
+                option={{ label: values.test, option: values.test, value: values.test }}
+                onChange={(option) => {
+                  setFieldValues('test', option)
                 }}
                 {...(!!errors &&
                   !!errors.birthDate && {

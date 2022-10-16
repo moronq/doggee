@@ -21,12 +21,13 @@ interface Option {
 interface SelectProps extends Omit<InputProps, 'value' | 'onChange'> {
   option?: Option
   locale?: string
-  onChange: (date: Date) => void
+  onChange: (option: Option['option']) => void
 }
 
 export const Select: React.FC<SelectProps> = ({
   option,
   disabled,
+  onChange,
   isError,
   locale = 'en-US',
   ...props
@@ -35,9 +36,18 @@ export const Select: React.FC<SelectProps> = ({
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const [showOptions, setShowOptions] = React.useState(false)
-  const [inputValue, setInputValue] = React.useState(option?.label ?? '')
+  const [inputValue, setInputValue] = React.useState('')
 
-  useOnClickOutside(selectContainerRef, () => setShowOptions(false))
+  const [focusedOptionIndex, setFocusedOptionIndex] = React.useState(
+    options.findIndex((o) => o.value === option?.value) === -1
+      ? 0
+      : options.findIndex((o) => o.value === option?.value)
+  )
+
+  useOnClickOutside(selectContainerRef, () => {
+    setInputValue('')
+    setShowOptions(false)
+  })
 
   const SelectIcon = React.useCallback(
     () => (
@@ -51,6 +61,12 @@ export const Select: React.FC<SelectProps> = ({
     [disabled, showOptions]
   )
 
+  React.useEffect(() => {
+    if (showOptions && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [showOptions])
+
   return (
     <div
       aria-hidden
@@ -58,8 +74,23 @@ export const Select: React.FC<SelectProps> = ({
       ref={selectContainerRef}
       onClick={() => {
         setShowOptions(true)
-        if (inputRef.current) {
-          inputRef.current.focus()
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowDown') {
+          if (focusedOptionIndex === options.length - 1) {
+            return setFocusedOptionIndex(0)
+          }
+          setFocusedOptionIndex(focusedOptionIndex + 1)
+        }
+        if (e.key === 'ArrowUp') {
+          if (focusedOptionIndex === 0) {
+            return setFocusedOptionIndex(options.length - 1)
+          }
+          setFocusedOptionIndex(focusedOptionIndex - 1)
+        }
+        if (e.key === 'Enter') {
+          const option = options.find((_, index) => focusedOptionIndex === index)
+          if (option) onChange(option.option)
         }
       }}
     >
@@ -70,15 +101,18 @@ export const Select: React.FC<SelectProps> = ({
           className={`${styles.input_container} ${isError ? styles.input_error : ''}`}
           onClick={() => inputRef.current?.focus()}
         >
-          <input
-            ref={inputRef}
-            className={styles.input}
-            {...props}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              const { value } = event.target
-              setInputValue(value)
-            }}
-          />
+          {showOptions && (
+            <input
+              ref={inputRef}
+              className={styles.input}
+              {...props}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                const { value } = event.target
+                setInputValue(value)
+              }}
+            />
+          )}
+
           <label htmlFor={props.id} className={`${styles.input_label}`}>
             {props.label}
           </label>
@@ -87,27 +121,29 @@ export const Select: React.FC<SelectProps> = ({
           <SelectIcon />
         </div>
       </div>
-      {/* <Input
-        value={inputValue}
-        disabled={disabled}
-        {...props}
-        components={{
-          indicator: () => <SelectIcon />
-        }}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          const { value } = event.target
-          setInputValue(value)
-        }}
-      /> */}
+
       {showOptions && (
         <ul className={styles.options_container}>
           {options
             .filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase()))
-            .map((option) => (
-              <li className={styles.option_container} key={option.value}>
-                {option.label}
-              </li>
-            ))}
+            .map(({ label, option: op, value }, index) => {
+              const isSelected = op === option?.value
+              const isFocused = index === focusedOptionIndex
+              return (
+                <li
+                  aria-hidden
+                  className={`${styles.option_container} ${
+                    isSelected ? styles.selected_option_container : ''
+                  } ${isFocused ? styles.focused_option_container : ''}`}
+                  key={value}
+                  onClick={() => {
+                    onChange(op)
+                  }}
+                >
+                  {label}
+                </li>
+              )
+            })}
         </ul>
       )}
     </div>
