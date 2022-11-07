@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { Input, InputPassword } from '@common/fields'
-import { IntlText, useIntl } from '@features'
+import { IntlText, useIntl, useMutation } from '@features'
 import { PasswordRules, validateIsEmpty } from '@pages'
-import { api, useForm, useMutation, useStore } from '@utils'
+import { createRegistration, useForm, useStore } from '@utils'
 
 import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
 
@@ -27,10 +27,10 @@ const registrationFormValidateSchema = {
 }
 
 export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ nextStep }) => {
-  const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation<
-    Omit<RegistrationFormValues, 'passwordAgain'>,
-    ApiResponse<User>
-  >((values) => api.post('registration', values))
+  const { mutationAsync: registrationMutation, isLoading: registrationLoading } = useMutation(
+    'createRegistration',
+    (params: RegistrationReqPostParams) => createRegistration({ params })
+  )
 
   const { translateMessage } = useIntl()
   const { setStore } = useStore()
@@ -48,8 +48,7 @@ export const FillLoginDataStep: React.FC<FillLoginDataStepProps> = ({ nextStep }
         password: values.password,
         username: values.username
       })
-      console.log(response)
-      if (!response?.success) return
+      if (!response.success) return
       setStore({ user: response.data })
       nextStep()
     }

@@ -1,6 +1,8 @@
 import React from 'react'
 
+import { Button } from '@common/buttons'
 import { Stepper } from '@common/wizard'
+import { IntlText } from '@features'
 
 import styles from './RegistrationWizardContainer.module.css'
 
@@ -8,6 +10,7 @@ interface RegistrationWizardContainerProps {
   activeStep?: number
   form: {
     title: React.ReactNode | string
+    backButton?: React.ReactNode
     content: React.ReactNode
   }
   panel: {
@@ -30,11 +33,12 @@ export const RegistrationWizardContainer: React.FC<RegistrationWizardContainerPr
             <Stepper activeStep={activeStep} stepLables={['Your profile', 'Your pets', 'Woof!']} />
           </div>
         )}
+        {form.backButton && <div className={styles.back_container}>{form.backButton}</div>}
         {form.content}
       </div>
       <div className={styles.panel_container}>
         <div className={styles.panel_header}>doggee</div>
-        <div className={styles.panel_data}>{panel.data}</div>
+        {panel.data && <div className={styles.panel_data}>{panel.data}</div>}
         <div className={styles.panel_footer}>{panel.footer}</div>
       </div>
     </div>

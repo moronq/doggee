@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { CheckBox, Input, InputPassword } from '@common/fields'
-import { IntlText, useIntl, useTheme } from '@features'
+import { IntlText, useIntl, useMutation,useTheme } from '@features'
 import { useForm } from '@utils'
-import { api } from '@utils/api'
+import { api, createAuth } from '@utils/api'
 import { setCookie } from '@utils/helpers'
-import { useMutation } from '@utils/hooks'
 
 import styles from './LoginPage.module.css'
 
@@ -32,10 +31,10 @@ interface FormValues {
 }
 
 export const LoginPage = () => {
-  const { isLoading: authIsLoading, mutationAsync: authMutation } = useMutation<
-    FormValues,
-    ApiResponse<User[]>
-  >((values) => api.post('auth', values))
+  const { isLoading: authIsLoading, mutationAsync: authMutation } = useMutation(
+    'auth',
+    (params: AuthReqPostParams) => createAuth({ params })
+  )
 
   const { values, errors, setFieldValues, handleSubmit } = useForm<FormValues>({
     initialValues: {

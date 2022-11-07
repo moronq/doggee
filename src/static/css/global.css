@@ -20,5 +20,10 @@
   --images-checkmark: url('../images/checkmark.svg');
   --images-arrow-additional: url('../images/arrow_additional.svg');
   /* spacing */
-  /* text */
+
+  /* fonts */
+  --font-family-baloo: 'Baloo';
+  --font-family-open-sans: 'Open Sans', sans-serif;
+  --font-weight800: 800;
+  --font-weight600: 600;
 }

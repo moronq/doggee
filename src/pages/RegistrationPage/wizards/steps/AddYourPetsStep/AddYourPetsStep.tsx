@@ -1,13 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import { Button } from '@common/buttons'
 import { DateInput, Input, Select } from '@common/fields'
-import { IntlText, useIntl } from '@features'
+import { IntlText, useIntl, useMutation, useQuery } from '@features'
 import { validateIsEmpty } from '@pages'
-import { changeUser, dogApi, useCache, useForm, useMutation, useQuery, useStore } from '@utils'
+import { changeUser, dogApi, useCache, useForm, useStore } from '@utils'
 
 import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
+import { PetList } from './PetList/PetList'
 
 import styles from '../FillProfileDataStep/FillProfileDataStep.module.css'
 
@@ -43,8 +43,10 @@ interface Breed {
   }
 }
 
-interface FillProfileDataStepProps {
-  nextStep: () => void
+interface AddYourPetsStepProps {
+  initialData: $TSFixMe
+  nextStep: (addPetsData: PetFormValues[]) => void
+  backStep: (addPetsData: PetFormValues[]) => void
 }
 
 const profileFormValidateSchema = {
@@ -77,52 +79,57 @@ const FillProfilePanelData: React.FC<FillProfilePanelDataProps> = ({ focusedFiel
   )
 }
 
-export const AddYourPetsStep: React.FC<FillProfileDataStepProps> = ({ nextStep }) => {
+export const AddYourPetsStep: React.FC<AddYourPetsStepProps> = ({
+  nextStep,
+  initialData,
+  backStep
+}) => {
   const { setStore, user } = useStore()
+  const { translateMessage } = useIntl()
+
   // const { cache, setCache } = useCache()
 
-  const [currentField, setCurrentField] = React.useState<Steps>(null)
+  // const [currentField, setCurrentField] = React.useState<Steps>(null)
 
-  const { data: breedsData, isLoading: breedsLoading } = useQuery<Breed[]>(
-    'breeds',
-    () => dogApi.get('breeds'),
-    [],
-    { onSuccess: (data) => console.log(data) }
+  const [pets, setPets] = React.useState(initialData)
+  const [selectedPetId, setSelectedPetId] = React.useState(pets[0].id)
+
+  const { data: breedsData, isLoading: breedsLoading } = useQuery<Breed[]>('breeds', () =>
+    dogApi.get('breeds')
   )
 
-  const { mutationAsync: profileMutation, isLoading: profileLoading } = useMutation<
-    UsersReqPatchParams,
-    ApiResponse<User>
-  >((params) => changeUser({ params }))
+  const { mutationAsync: changeUserMutation, isLoading: changeUserLoading } = useMutation(
+    'changeUser',
+    (params: UsersIdReqPatchParams) => changeUser({ params })
+  )
 
   const { values, errors, setFieldValues, handleSubmit } = useForm<PetFormValues>({
-    initialValues: {
-      dogName: '',
-      dogWeight: '',
-      breed: null,
-      dogBirthday: new Date(new Date().getTime())
-    },
+    initialValues: pets[0],
     // validateSchema: profileFormValidateSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
       // const response = await profileMutation(values)
       // if (!response?.success) return
       // setStore({ user: response.data })
-      // nextStep()
+      nextStep(pets)
     }
   })
-  const { translateMessage } = useIntl()
 
   return (
     <RegistrationWizardContainer
       activeStep={2}
       form={{
         title: <IntlText path='page.registration.fillYourLoginData' />,
+        backButton: (
+          <div aria-hidden onClick={() => backStep(pets)}>
+            <IntlText path='go back' />
+          </div>
+        ),
         content: (
           <form className={styles.form_container} onSubmit={handleSubmit}>
             <div className={styles.input_container}>
               <Input
-                disabled={profileLoading}
+                // disabled={profileLoading}
                 value={values.dogName}
                 label={translateMessage('field.input.dogName.label')}
                 // onFocus={() => setCurrentField('dogName')}
@@ -152,7 +159,7 @@ export const AddYourPetsStep: React.FC<FillProfileDataStepProps> = ({ nextStep }
             </div>
             <div className={styles.input_container}>
               <DateInput
-                disabled={profileLoading}
+                // disabled={profileLoading}
                 label={translateMessage('field.input.dogBirthday.label')}
                 value={values.dogBirthday}
                 onChange={(date) => {
@@ -167,7 +174,7 @@ export const AddYourPetsStep: React.FC<FillProfileDataStepProps> = ({ nextStep }
             </div>
             <div className={styles.input_container}>
               <Input
-                disabled={profileLoading}
+                // disabled={profileLoading}
                 value={values.dogWeight}
                 label={translateMessage('field.input.dogWeight.label')}
                 // onFocus={() => setCurrentField('dogName')}
@@ -183,18 +190,21 @@ export const AddYourPetsStep: React.FC<FillProfileDataStepProps> = ({ nextStep }
               />
             </div>
 
-            <Button type='submit' isLoading={profileLoading}>
+            <Button
+              type='submit'
+              // isLoading={profileLoading}
+            >
               <IntlText path='button.done' values={{ test: 213124 }} />
             </Button>
           </form>
         )
       }}
       panel={{
-        data: <FillProfilePanelData focusedField={currentField} />,
+        data: <PetList />,
         footer: (
-          <Link to='/auth'>
+          <div role='link' tabIndex={0} aria-hidden onClick={() => nextStep(pets)}>
             <IntlText path='page.registration.iAlreadyHaveAnAccount' />
-          </Link>
+          </div>
         )
       }}
     />
