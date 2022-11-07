@@ -1,115 +1,96 @@
 import React from 'react'
 
-import { formatDate, MAX_LENGTH, useOnClickOutside } from '@utils'
-
-import { Input, InputProps } from '../../inputs/Input/Input'
+import { useSelect } from './hooks/useSelect'
 
 import styles from './Select.module.css'
 
-const options = [
-  { label: 'Apple', value: 'Apple', option: 'Apple' },
-  { label: 'orange', value: 'orange', option: 'orange' },
-  { label: 'qiwi', value: 'qiwi', option: 'qiwi' }
-]
-
-interface Option {
-  label: string
-  value: string | number
-  option: $TSFixMe
+interface SelectProps extends Omit<FieldProps, 'value' | 'onChange'> {
+  options: Option[]
+  value: Option | null
+  onChange: (option: Option) => void
+  filterOption?: FilterOptionFunc
+  components?: {
+    NoOptionsMessage?: React.ComponentType
+    Option?: React.ComponentType<{ option: Option }>
+    SelectedValue?: React.ComponentType<{ option: Option }>
+  }
 }
 
-interface SelectProps extends Omit<InputProps, 'value' | 'onChange'> {
-  option?: Option
-  locale?: string
-  onChange: (option: Option['option']) => void
-}
+const defaultFilterOption: FilterOptionFunc = (option, inputValue) =>
+  option.label.toLowerCase().includes(inputValue.toLowerCase())
 
 export const Select: React.FC<SelectProps> = ({
-  option,
+  options,
   disabled,
+  value,
+  filterOption = defaultFilterOption,
+  components,
+  loading,
   onChange,
-  isError,
-  locale = 'en-US',
+  isError = false,
+  helperText,
   ...props
 }) => {
-  const selectContainerRef = React.useRef<HTMLDivElement>(null)
-  const inputRef = React.useRef<HTMLInputElement>(null)
+  const { functions, refs, state } = useSelect({
+    options,
+    filterOption,
+    value,
+    onChange
+  })
 
-  const [showOptions, setShowOptions] = React.useState(false)
-  const [inputValue, setInputValue] = React.useState('')
+  const showValidationMessage = !state.showOptions && isError && !!helperText
+  const showOption = !!value
 
-  const [focusedOptionIndex, setFocusedOptionIndex] = React.useState(
-    options.findIndex((o) => o.value === option?.value) === -1
-      ? 0
-      : options.findIndex((o) => o.value === option?.value)
-  )
-
-  useOnClickOutside(selectContainerRef, () => {
-    setInputValue('')
-    setShowOptions(false)
+  const optionItems = state.filteredOptions.map((option) => {
+    const isSelected = state.searchSelectedOption.id === option.id
+    return (
+      <li key={option.id}>
+        {components?.Option ? <components.Option option={option} /> : option.label}
+      </li>
+    )
   })
 
   const SelectIcon = React.useCallback(
     () => (
-      <div aria-hidden role='button' onClick={() => !disabled && setShowOptions(!showOptions)}>
+      <div aria-hidden role='button'>
         <div
           className={styles.select_icon}
-          style={{ transform: !showOptions ? 'rotate(180deg)' : 'rotate(0deg)' }}
+          style={{ transform: !state.showOptions ? 'rotate(180deg)' : 'rotate(0deg)' }}
         />
       </div>
     ),
-    [disabled, showOptions]
+    [state.showOptions]
   )
-
-  React.useEffect(() => {
-    if (showOptions && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [showOptions])
 
   return (
     <div
       aria-hidden
       className={styles.date_input_container}
-      ref={selectContainerRef}
-      onClick={() => {
-        setShowOptions(true)
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'ArrowDown') {
-          if (focusedOptionIndex === options.length - 1) {
-            return setFocusedOptionIndex(0)
-          }
-          setFocusedOptionIndex(focusedOptionIndex + 1)
-        }
-        if (e.key === 'ArrowUp') {
-          if (focusedOptionIndex === 0) {
-            return setFocusedOptionIndex(options.length - 1)
-          }
-          setFocusedOptionIndex(focusedOptionIndex - 1)
-        }
-        if (e.key === 'Enter') {
-          const option = options.find((_, index) => focusedOptionIndex === index)
-          if (option) onChange(option.option)
-        }
-      }}
+      ref={refs.selectRef}
+      onKeyDown={functions.onSelectKeyDown}
     >
       <div className={styles.field_container}>
         <div
           aria-hidden='true'
           aria-disabled={disabled}
           className={`${styles.input_container} ${isError ? styles.input_error : ''}`}
-          onClick={() => inputRef.current?.focus()}
+          onClick={() => {
+            if (disabled || loading) return
+            functions.onSelectClick()
+          }}
         >
-          {showOptions && (
+          <div className={styles.input_indicator}>
+            <SelectIcon />
+          </div>
+          {state.showOptions && (
             <input
-              ref={inputRef}
               className={styles.input}
-              {...props}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                const { value } = event.target
-                setInputValue(value)
-              }}
+              autoComplete='off'
+              type='text'
+              disabled={disabled}
+              ref={refs.inputRef}
+              value={state.inputValue}
+              onChange={functions.searchInputHandler}
             />
           )}
 
@@ -117,35 +98,19 @@ export const Select: React.FC<SelectProps> = ({
             {props.label}
           </label>
         </div>
-        <div className={styles.input_indicator}>
-          <SelectIcon />
-        </div>
       </div>
 
-      {showOptions && (
-        <ul className={styles.options_container}>
-          {options
-            .filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase()))
-            .map(({ label, option: op, value }, index) => {
-              const isSelected = op === option?.value
-              const isFocused = index === focusedOptionIndex
-              return (
-                <li
-                  aria-hidden
-                  className={`${styles.option_container} ${
-                    isSelected ? styles.selected_option_container : ''
-                  } ${isFocused ? styles.focused_option_container : ''}`}
-                  key={value}
-                  onClick={() => {
-                    onChange(op)
-                  }}
-                >
-                  {label}
-                </li>
-              )
-            })}
+      {state.showOptions && (
+        <ul ref={refs.ulRef} className={styles.options_container}>
+          {!state.filteredOptions.length && (
+            <div>
+              {components?.NoOptionsMessage ? <components.NoOptionsMessage /> : 'no option'}
+            </div>
+          )}
+          {optionItems}
         </ul>
       )}
+      {showValidationMessage && <div>{helperText}</div>}
     </div>
   )
 }

@@ -8,24 +8,26 @@ export class API {
     this.baseUrl = baseUrl
   }
 
-  async request<T>(endpoint: string, options: RequestInit = {}) {
-    const response = await fetch(this.baseUrl + endpoint, {
-      method: 'GET',
-      credentials: 'same-origin',
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(!!options?.headers && options.headers)
-      }
-    })
+  async request<T>(endpoint: string, options: RequestInit = {}): Promise<$TSFixMe> {
+    const response = await fetch(this.baseUrl + endpoint)
+    // const response = await fetch(this.baseUrl + endpoint, {
+    //   credentials: 'same-origin',
+    //   mode: 'no-cors',
+    //   ...options,
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     ...(!!options?.headers && options.headers)
+    //   }
+    // })
 
     if (!response.ok) throw new Error(response.statusText)
 
     const responseData = (await response.json()) as ApiResponse<T>
-    if (responseData.success) {
-      return { data: responseData.data, status: response.status, success: responseData.success }
-    }
-    return { data: responseData.data, status: response.status, success: responseData.success }
+    // if (responseData.success) {
+    //   return { data: responseData.data, status: response.status, success: responseData.success }
+    // }
+    // return { data: responseData.data, status: response.status, success: responseData.success }
+    return { data: responseData, status: response.status, success: responseData.success }
   }
 
   get<T>(endpoint: string, options: Omit<RequestInit, 'body'> = {}) {

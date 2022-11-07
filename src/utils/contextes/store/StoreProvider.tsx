@@ -1,7 +1,7 @@
 import React from 'react'
 
-import type { Store, StoreContextProps } from './StoreConext'
-import { StoreContext } from './StoreConext'
+import type { Store, StoreContextProps } from './StoreContext'
+import { StoreContext } from './StoreContext'
 
 type StoreProviderProps = Omit<StoreContextProps, 'setStore'> & {
   children: React.ReactNode

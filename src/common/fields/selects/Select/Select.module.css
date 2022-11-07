@@ -12,6 +12,7 @@
 }
 
 .options_container {
+  z-index: 99;
   margin-top: 5px;
   cursor: pointer;
   position: absolute;
