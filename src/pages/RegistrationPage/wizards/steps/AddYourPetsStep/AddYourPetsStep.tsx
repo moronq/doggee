@@ -7,6 +7,7 @@ import { validateIsEmpty } from '@pages'
 import { changeUser, dogApi, useCache, useForm, useStore } from '@utils'
 
 import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
+
 import { PetList } from './PetList/PetList'
 
 import styles from '../FillProfileDataStep/FillProfileDataStep.module.css'
@@ -115,6 +116,23 @@ export const AddYourPetsStep: React.FC<AddYourPetsStepProps> = ({
     }
   })
 
+  const addPet = () => {
+    setPets([
+      ...pets,
+      { id: pets.length + 1, dogBirthday: new Date(), breed: '', dogName: '', dogWeight: '' }
+    ])
+  }
+
+  const deletePet = (id: Pet['id']) => {
+    const updatedPets = [...pets.filter((pet: Pet) => pet.id !== id)]
+    setSelectedPetId(updatedPets[0].id)
+    setPets(updatedPets)
+  }
+
+  const selectPet = (id: Pet['id']) => {
+    setSelectedPetId(id)
+  }
+
   return (
     <RegistrationWizardContainer
       activeStep={2}
@@ -200,7 +218,15 @@ export const AddYourPetsStep: React.FC<AddYourPetsStepProps> = ({
         )
       }}
       panel={{
-        data: <PetList />,
+        data: (
+          <PetList
+            pets={pets}
+            onAdd={addPet}
+            onDelete={deletePet}
+            onSelect={selectPet}
+            selectedPetId={selectedPetId}
+          />
+        ),
         footer: (
           <div role='link' tabIndex={0} aria-hidden onClick={() => nextStep(pets)}>
             <IntlText path='page.registration.iAlreadyHaveAnAccount' />

@@ -27,7 +27,7 @@ interface Pet {
   dogName: string
   dogWeight: string
   breed: $TSFixMe
-  dogBirthday: number
+  dogBirthday: Date
 }
 
 interface User {

@@ -1,0 +1,35 @@
+.pets_container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+.line {
+  height: 1px;
+  background-color: var(--color-field-focused);
+}
+
+.add_pet {
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.add_pet:before {
+  content: '';
+  background-image: var(--images-plus-additional);
+  width: 14px;
+  height: 15px;
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center;
+  left: 60px;
+}
