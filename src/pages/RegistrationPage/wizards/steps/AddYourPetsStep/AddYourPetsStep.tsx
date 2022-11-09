@@ -5,6 +5,7 @@ import { DateInput, Input, Select } from '@common/fields'
 import { IntlText, useIntl, useMutation, useQuery } from '@features'
 import { validateIsEmpty } from '@pages'
 import { changeUser, dogApi, useCache, useForm, useStore } from '@utils'
+import { PetForm } from './PetForm/PetForm'
 
 import { RegistrationWizardContainer } from '../../RegistrationWizardContainer/RegistrationWizardContainer'
 
@@ -50,11 +51,33 @@ interface AddYourPetsStepProps {
   backStep: (addPetsData: PetFormValues[]) => void
 }
 
-const profileFormValidateSchema = {
+const petFormValidationSchema = {
   dogName: (value: string) => validateIsEmpty(value),
-  dogWeight: (value: string) => validateIsEmpty(value),
-  breed: (value: string) => validateIsEmpty(value),
-  dogBirthday: (value: string) => validateIsEmpty(value)
+  dogWeight: (value: string) => validateIsEmpty(value)
+}
+
+const validatePets = (pets: Pet[]) => {
+  let errors: {
+    [id: string]: { [K in keyof typeof petFormValidationSchema]?: ValidationReturn }
+  } = {}
+
+  pets.forEach((pet) => {
+    let petErrors: { [K in keyof typeof petFormValidationSchema]?: ValidationReturn } = {}
+    Object.keys(pet).forEach((field) => {
+      const error = petFormValidationSchema[field as keyof typeof petFormValidationSchema](
+        pet[field as keyof typeof petFormValidationSchema]
+      )
+      if (!error) return
+
+      petErrors = {
+        ...petErrors,
+        [field]: error
+      }
+    })
+    if (!Object.keys.length) return
+    errors = { ...errors, [pet.id]: petErrors }
+  })
+  return errors
 }
 
 type Steps = 'name' | 'registrationAddress' | 'birthDate' | 'test' | null
@@ -94,27 +117,12 @@ export const AddYourPetsStep: React.FC<AddYourPetsStepProps> = ({
 
   const [pets, setPets] = React.useState(initialData)
   const [selectedPetId, setSelectedPetId] = React.useState(pets[0].id)
-
-  const { data: breedsData, isLoading: breedsLoading } = useQuery<Breed[]>('breeds', () =>
-    dogApi.get('breeds')
-  )
+  const [petErrors, setPetErrors] = React.useState({})
 
   const { mutationAsync: changeUserMutation, isLoading: changeUserLoading } = useMutation(
     'changeUser',
     (params: UsersIdReqPatchParams) => changeUser({ params })
   )
-
-  const { values, errors, setFieldValues, handleSubmit } = useForm<PetFormValues>({
-    initialValues: pets[0],
-    // validateSchema: profileFormValidateSchema,
-    validateOnChange: false,
-    onSubmit: async (values) => {
-      // const response = await profileMutation(values)
-      // if (!response?.success) return
-      // setStore({ user: response.data })
-      nextStep(pets)
-    }
-  })
 
   const addPet = () => {
     setPets([
@@ -144,83 +152,43 @@ export const AddYourPetsStep: React.FC<AddYourPetsStepProps> = ({
           </div>
         ),
         content: (
-          <form className={styles.form_container} onSubmit={handleSubmit}>
-            <div className={styles.input_container}>
-              <Input
-                // disabled={profileLoading}
-                value={values.dogName}
-                label={translateMessage('field.input.dogName.label')}
-                // onFocus={() => setCurrentField('dogName')}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const dogName = e.target.value
-                  setFieldValues('dogName', dogName)
-                }}
-                {...(!!errors &&
-                  !!errors.dogName && { isError: !!errors.dogName, helperText: errors.dogName })}
-              />
-            </div>
-            <div className={styles.input_container}>
-              <Select
-                value={values.breed}
-                label={translateMessage('field.input.breed.label')}
-                options={
-                  breedsData?.map((breed) => ({
-                    label: breed.name,
-                    id: breed.id,
-                    value: breed
-                  })) ?? []
-                }
-                onChange={(option) => {
-                  setFieldValues('breed', option)
-                }}
-              />
-            </div>
-            <div className={styles.input_container}>
-              <DateInput
-                // disabled={profileLoading}
-                label={translateMessage('field.input.dogBirthday.label')}
-                value={values.dogBirthday}
-                onChange={(date) => {
-                  setFieldValues('dogBirthday', date)
-                }}
-                {...(!!errors &&
-                  !!errors.dogBirthday && {
-                    isError: !!errors.dogBirthday,
-                    helperText: errors.dogBirthday
-                  })}
-              />
-            </div>
-            <div className={styles.input_container}>
-              <Input
-                // disabled={profileLoading}
-                value={values.dogWeight}
-                label={translateMessage('field.input.dogWeight.label')}
-                // onFocus={() => setCurrentField('dogName')}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const dogWeight = e.target.value
-                  setFieldValues('dogWeight', dogWeight)
-                }}
-                {...(!!errors &&
-                  !!errors.dogWeight && {
-                    isError: !!errors.dogWeight,
-                    helperText: errors.dogWeight
-                  })}
-              />
-            </div>
-
+          <>
+            <PetForm
+              onChange={(field, value) => {
+                setPets([
+                  ...pets.map((pet) => {
+                    if (pet.id === selectedPetId) {
+                      return { ...pet, [field]: value }
+                    }
+                    return pet
+                  })
+                ])
+              }}
+              isLoading={changeUserLoading}
+              pet={pets.find((pet) => pet.id === selectedPetId)}
+            />
             <Button
               type='submit'
-              // isLoading={profileLoading}
+              isLoading={changeUserLoading}
+              onClick={() => {
+                const petErrors = validatePets(pets)
+                if (Object.keys(petErrors).length) {
+                  setPetErrors(petErrors)
+                  return
+                }
+                nextStep(pets)
+              }}
             >
               <IntlText path='button.done' values={{ test: 213124 }} />
             </Button>
-          </form>
+          </>
         )
       }}
       panel={{
         data: (
           <PetList
             pets={pets}
+            errors={petErrors}
             onAdd={addPet}
             onDelete={deletePet}
             onSelect={selectPet}
